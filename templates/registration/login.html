@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Đăng nhập{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-base-200">
+    <div class="w-full max-w-md">
+        <div class="card bg-base-100 shadow-xl border border-base-300">
+            <div class="card-body">
+                <h2 class="text-center text-2xl font-bold">Đăng nhập vào LocationAI</h2>
+                <p class="text-center text-sm text-base-content/70">
+                    Chào mừng bạn trở lại! Hãy đăng nhập để tiếp tục.
+                </p>
+
+                <!-- Hiển thị lỗi -->
+                {% if form.errors %}
+                <div class="alert alert-error mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>
+                        {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                        {% if "Please enter a correct username" in error %}
+                        Tên đăng nhập hoặc mật khẩu không đúng.
+                        {% else %}
+                        {{ error }}
+                        {% endif %}
+                        {% endfor %}
+                        {% endfor %}
+                    </span>
+                </div>
+                {% endif %}
+
+                <!-- Form -->
+                <form method="post" class="mt-4 space-y-4">
+                    {% csrf_token %}
+
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text">Tên đăng nhập</span>
+                        </div>
+                        <input type="text" name="{{ form.username.name }}" value="{{ form.username.value|default:'' }}"
+                            placeholder="Nhập tên đăng nhập" class="input input-bordered w-full" required />
+                    </label>
+
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text">Mật khẩu</span>
+                        </div>
+                        <input type="password" name="{{ form.password.name }}" placeholder="Nhập mật khẩu"
+                            class="input input-bordered w-full" required />
+                    </label>
+
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" class="checkbox checkbox-sm" name="remember-me" />
+                            <span class="text-sm">Ghi nhớ đăng nhập</span>
+                        </label>
+                        <a href="#" class="link link-primary text-sm">Quên mật khẩu?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full">Đăng nhập</button>
+                </form>
+
+                <!-- Divider -->
+                <div class="divider">Hoặc tiếp tục với</div>
+
+                <!-- Social Login -->
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" class="btn btn-outline gap-2">
+                        <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />
+                        </svg>
+                        Google
+                    </button>
+                    <button type="button" class="btn btn-outline gap-2">
+                        <svg class="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Facebook
+                    </button>
+                </div>
+
+                <!-- Sign Up -->
+                <p class="mt-6 text-center text-sm">
+                    Chưa có tài khoản?
+                    <a href="{% url 'signup' %}" class="link link-primary">Đăng ký ngay</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

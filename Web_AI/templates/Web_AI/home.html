@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Trang Chủ - CheckPhish{% endblock %}
+{% load static %}
+
+{% block content %}
+<main class="min-h-screen bg-base-100">
+
+    <!-- Hero Section -->
+    <section class="hero bg-base-200 py-16 px-6">
+        <div class="hero-content text-center">
+            <div class="max-w-2xl">
+                <h1 class="text-5xl font-bold">CheckPhish</h1>
+                <p class="py-6 text-lg text-gray-600">
+                    Bảo vệ bạn khỏi phishing, scam và các mối đe dọa trực tuyến.
+                    Quét URL, email đáng ngờ, theo dõi domain giả mạo và hành động ngay lập tức.
+                </p>
+                <a href="#scanner" class="btn btn-primary">Bắt đầu quét ngay</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="py-16 px-6 max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-center mb-12">Tính năng nổi bật</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="card bg-base-200 shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-2">📧 Email Scanner</h3>
+                <p>Phát hiện email lừa đảo, kiểm tra tiêu đề, liên kết, và cảnh báo nội dung nguy hiểm.</p>
+            </div>
+            <div class="card bg-base-200 shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-2">🌐 URL Scanner</h3>
+                <p>Quét liên kết đáng ngờ, phân tích chứng chỉ SSL, nội dung trang, và so sánh với blacklist.</p>
+            </div>
+            <div class="card bg-base-200 shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-2">🎯 Typosquat Monitoring</h3>
+                <p>Theo dõi các domain tương tự (lookalike) có nguy cơ giả mạo thương hiệu của bạn.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scanner Tabs -->
+    <section id="scanner" class="py-16 px-6 bg-base-200">
+        <h2 class="text-3xl font-bold text-center mb-8">Dùng thử ngay</h2>
+        <div role="tablist" class="tabs tabs-boxed justify-center mb-6">
+            <input type="radio" name="tab-example" role="tab" class="tab" aria-label="Email Scanner" />
+            <input type="radio" name="tab-example" role="tab" class="tab tab-active" aria-label="URL Scanner" checked />
+            <input type="radio" name="tab-example" role="tab" class="tab" aria-label="Typosquat Monitoring" />
+            <input type="radio" name="tab-example" role="tab" class="tab" aria-label="Takedown" />
+        </div>
+
+        <div class="max-w-2xl mx-auto">
+            <div class="flex gap-2">
+                <input type="url" placeholder="Nhập URL cần kiểm tra" class="input input-bordered w-full" />
+                <button class="btn btn-primary">Scan</button>
+            </div>
+            <p class="text-center mt-4 text-gray-500">
+                Hệ thống sẽ phân tích URL, kiểm tra blacklist, chứng chỉ, và các dấu hiệu phishing.
+            </p>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="py-16 px-6 max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-center mb-12">CheckPhish trong con số</h2>
+        <div class="stats shadow flex flex-col md:flex-row">
+            <div class="stat">
+                <div class="stat-title">URL đã quét</div>
+                <div class="stat-value">1.2M+</div>
+                <div class="stat-desc">Trong 12 tháng qua</div>
+            </div>
+            <div class="stat">
+                <div class="stat-title">Email phân tích</div>
+                <div class="stat-value">850K+</div>
+                <div class="stat-desc">Bởi AI & Machine Learning</div>
+            </div>
+            <div class="stat">
+                <div class="stat-title">Domain theo dõi</div>
+                <div class="stat-value">3K+</div>
+                <div class="stat-desc">Thương hiệu toàn cầu</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-primary text-primary-content text-center">
+        <h2 class="text-4xl font-bold mb-4">Bảo vệ doanh nghiệp của bạn ngay hôm nay</h2>
+        <p class="mb-6">Dùng thử miễn phí hoặc nâng cấp để có trải nghiệm đầy đủ.</p>
+        <a href="#signup" class="btn btn-secondary">Đăng ký ngay</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer p-10 bg-base-300 text-base-content">
+        <aside>
+            <h3 class="text-2xl font-bold">CheckPhish</h3>
+            <p>Bảo vệ bạn khỏi các trang web lừa đảo và phishing.</p>
+        </aside>
+        <nav>
+            <h6 class="footer-title">Sản phẩm</h6>
+            <a class="link link-hover">Kiểm tra URL</a>
+            <a class="link link-hover">Theo dõi domain</a>
+            <a class="link link-hover">API</a>
+        </nav>
+        <nav>
+            <h6 class="footer-title">Hỗ trợ</h6>
+            <a class="link link-hover">Tài liệu</a>
+            <a class="link link-hover">FAQ</a>
+            <a class="link link-hover">Liên hệ</a>
+        </nav>
+        <nav>
+            <h6 class="footer-title">Theo dõi</h6>
+            <div class="flex gap-4">
+                <a href="#" title="Facebook" class="hover:text-blue-500">Fb</a>
+                <a href="#" title="Twitter" class="hover:text-sky-400">Tw</a>
+            </div>
+        </nav>
+    </footer>
+    <div class="text-center py-4 bg-base-300 border-t text-sm">
+        © 2024 CheckPhish. Tất cả quyền được bảo lưu.
+    </div>
+
+</main>
+{% endblock %}

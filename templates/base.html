@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CheckPhish - Công cụ kiểm tra và phát hiện trang web lừa đảo, phishing">
+    <title>{% block title %}CheckPhish{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'Web_AI/site.css' %}" />
+    <!-- Add Tailwind CSS for better styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- DaisyUI CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <!-- Add custom favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'Web_AI/favicon.ico' %}">
+</head>
+
+<body class="transition-colors duration-300" data-theme="light">
+    <!-- Header -->
+    <header class="header sticky top-0 z-50 backdrop-blur-sm">
+        <nav class="nav-container">
+            <!-- Logo Section -->
+            <div class="logo group cursor-pointer">
+                <div class="logo-icon group-hover:scale-110 transition-transform duration-200">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" />
+                        <path d="M2 17L12 22L22 17" />
+                        <path d="M2 12L12 17L22 12" />
+                    </svg>
+                </div>
+                <span class="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    CHECKPHISH
+                </span>
+            </div>
+
+            <!-- Navigation Menu -->
+            <ul class="nav-menu">
+                <li><a href="{% url 'home' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        Trang chủ
+                    </a></li>
+                <li><a href="{% url 'scanner' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'scanner' %}active{% endif %}">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        Kiểm tra
+                    </a></li>
+                <li><a href="{% url 'about' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Về chúng tôi
+                    </a></li>
+                <li><a href="{% url 'contact' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        Liên hệ
+                    </a></li>
+            </ul>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="mobile-menu-btn lg:hidden">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16" />
+                    <path id="close-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12" class="hidden" />
+                </svg>
+            </button>
+
+            <!-- Navigation Actions -->
+            <div class="nav-actions">
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="theme-toggle" title="Chuyển đổi giao diện">
+                    <!-- Sun Icon (shown in dark mode) -->
+                    <svg id="sun-icon" class="theme-icon w-5 h-5 hidden" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                        </path>
+                    </svg>
+                    <!-- Moon Icon (shown in light mode) -->
+                    <svg id="moon-icon" class="theme-icon w-5 h-5" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                        </path>
+                    </svg>
+                </button>
+
+
+                <!-- User Actions -->
+                {% if user.is_authenticated %}
+                <!-- User Avatar Dropdown -->
+                <div class="user-dropdown relative">
+                    <button id="user-menu-btn" class="user-avatar">
+                        {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="w-8 h-8 rounded-full">
+                        {% else %}
+                        <div
+                            class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                        </div>
+                        {% endif %}
+                    </button>
+                    <div id="user-dropdown-menu" class="user-dropdown-menu hidden">
+                        <div class="user-info">
+                            <p class="font-semibold">{{ user.get_full_name|default:user.username }}</p>
+                            <p class="text-sm text-gray-500">{{ user.email }}</p>
+                        </div>
+                        <hr class="my-2">
+                        <a href="{% url 'profile' %}" class="dropdown-item">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Hồ sơ cá nhân
+                        </a>
+                        <a href="{% url 'settings' %}" class="dropdown-item">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            Cài đặt
+                        </a>
+                        <hr class="my-2">
+                        <a href="{% url 'logout' %}" class="dropdown-item text-red-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            Đăng xuất
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-login">Đăng nhập</a>
+                <a href="{% url 'signup' %}" class="btn btn-primary">Đăng ký</a>
+                {% endif %}
+            </div>
+        </nav>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="mobile-menu hidden">
+            <div class="mobile-menu-content">
+                <a href="{% url 'home' %}" class="mobile-nav-link">Trang chủ</a>
+                <a href="{% url 'scanner' %}" class="mobile-nav-link">Kiểm tra</a>
+                <a href="{% url 'about' %}" class="mobile-nav-link">Về chúng tôi</a>
+                <a href="{% url 'contact' %}" class="mobile-nav-link">Liên hệ</a>
+                <hr class="my-4">
+                {% if not user.is_authenticated %}
+                <a href="{% url 'login' %}" class="mobile-nav-link">Đăng nhập</a>
+                <a href="{% url 'signup' %}" class="mobile-nav-link">Đăng ký</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator hidden">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="body-content">
+        {% block content %}
+        {% endblock %}
+
+        <hr class="border-gray-200 dark:border-gray-700" />
+
+        <!-- Improved Footer -->
+        <footer class="footer">
+            <div class="footer-container bg-gray-900 text-white py-10">
+                <div
+                    class="footer-content flex flex-col md:flex-row justify-between max-w-6xl mx-auto px-4 space-y-8 md:space-y-0 md:space-x-12">
+
+                    <!-- Cột 1 -->
+                    <div class="footer-section md:w-1/3">
+                        <h4 class="text-xl font-bold mb-2">CheckPhish</h4>
+                        <p class="text-gray-300 mb-4">Bảo vệ bạn khỏi các trang web lừa đảo và phishing.</p>
+                        <div class="flex space-x-4">
+                            <a href="#" title="Facebook" class="hover:text-blue-500">
+                                <!-- Facebook Icon -->
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 
+              5.373-12 12c0 5.99 4.388 10.954 
+              10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 
+              1.792-4.669 4.533-4.669 1.312 0 
+              2.686.235 2.686.235v2.953H15.83c-1.491 
+              0-1.956.925-1.956 1.874v2.25h3.328l-.532 
+              3.47h-2.796v8.385C19.612 23.027 24 
+              18.062 24 12.073z" />
+                                </svg>
+                            </a>
+                            <a href="#" title="Twitter" class="hover:text-sky-400">
+                                <!-- Twitter Icon -->
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M23.953 4.57a10 10 0 01-2.825.775 
+              4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 
+              1.184a4.92 4.92 0 00-8.384 
+              4.482C7.69 8.095 4.067 6.13 
+              1.64 3.162a4.822 4.822 0 
+              00-.666 2.475c0 1.71.87 3.213 
+              2.188 4.096a4.904 4.904 0 
+              01-2.228-.616v.06a4.923 4.923 
+              0 003.946 4.827 4.996 4.996 0 
+              01-2.212.085 4.936 4.936 0 
+              004.604 3.417 9.867 9.867 0 
+              01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 
+              13.995 0 007.557 2.209c9.053 0 
+              13.998-7.496 13.998-13.985 
+              0-.21 0-.42-.015-.63A9.935 9.935 
+              0 0024 4.59z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Cột 2 -->
+                    <div class="footer-section md:w-1/3">
+                        <h5 class="font-semibold mb-2">Sản phẩm</h5>
+                        <ul class="space-y-2 text-gray-300">
+                            <li><a href="#" class="hover:text-white">Kiểm tra URL</a></li>
+                            <li><a href="#" class="hover:text-white">Theo dõi domain</a></li>
+                            <li><a href="#" class="hover:text-white">API</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Cột 3 -->
+                    <div class="footer-section md:w-1/3">
+                        <h5 class="font-semibold mb-2">Hỗ trợ</h5>
+                        <ul class="space-y-2 text-gray-300">
+                            <li><a href="#" class="hover:text-white">Tài liệu</a></li>
+                            <li><a href="#" class="hover:text-white">FAQ</a></li>
+                            <li><a href="#" class="hover:text-white">Liên hệ</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Dòng cuối -->
+                <div class="footer-bottom text-center text-gray-400 mt-8">
+                    <p>&copy; 2024 CheckPhish. Tất cả quyền được bảo lưu.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Enhanced Theme Toggle Function
+        function toggleTheme() {
+            const body = document.body;
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            const currentTheme = body.getAttribute('data-theme');
+
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme on page load
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+
+            document.body.setAttribute('data-theme', savedTheme);
+
+            if (savedTheme === 'dark') {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
+
+            mobileMenu.classList.toggle('hidden');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        }
+
+        // Language dropdown toggle
+        function toggleLanguageDropdown() {
+            const dropdown = document.getElementById('language-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // User dropdown toggle
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('user-dropdown-menu');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Tab switching function
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            event.target.classList.add('active');
+
+            const input = document.getElementById('urlInput');
+            if (input) {
+                switch (tabName) {
+                    case 'email':
+                        input.placeholder = 'Nhập nội dung email để quét';
+                        break;
+                    case 'url':
+                        input.placeholder = 'Quét URL';
+                        break;
+                    case 'typo':
+                        input.placeholder = 'Nhập domain để theo dõi';
+                        break;
+                    case 'takedown':
+                        input.placeholder = 'Nhập URL độc hại để gỡ bỏ';
+                        break;
+                }
+            }
+        }
+
+        // URL scanning function
+        function scanUrl() {
+            const url = document.getElementById('urlInput')?.value;
+            if (!url || url.trim() === '') {
+                alert('Vui lòng nhập URL để quét');
+                return;
+            }
+
+            const scanBtn = document.querySelector('.scan-btn');
+            const originalText = scanBtn.textContent;
+            scanBtn.textContent = 'Đang quét...';
+            scanBtn.disabled = true;
+
+            // Show loading indicator
+            document.getElementById('loading-indicator').classList.remove('hidden');
+
+            setTimeout(() => {
+                scanBtn.textContent = originalText;
+                scanBtn.disabled = false;
+                document.getElementById('loading-indicator').classList.add('hidden');
+                alert('Quét hoàn thành! (Đây là demo)');
+            }, 2000);
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            // Load saved theme
+            loadTheme();
+
+            // Add event listeners
+            document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+            document.getElementById('mobile-menu-btn')?.addEventListener('click', toggleMobileMenu);
+            document.getElementById('language-btn')?.addEventListener('click', toggleLanguageDropdown);
+            document.getElementById('user-menu-btn')?.addEventListener('click', toggleUserDropdown);
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function (event) {
+                const languageDropdown = document.getElementById('language-dropdown');
+                const userDropdown = document.getElementById('user-dropdown-menu');
+
+                if (!event.target.closest('.language-selector')) {
+                    languageDropdown?.classList.add('hidden');
+                }
+
+                if (!event.target.closest('.user-dropdown')) {
+                    userDropdown?.classList.add('hidden');
+                }
+            });
+
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Enhanced URL input effects
+            const urlInput = document.getElementById('urlInput');
+            if (urlInput) {
+                urlInput.addEventListener('focus', function () {
+                    this.style.transform = 'translateY(-1px)';
+                    this.style.boxShadow = '0 4px 12px rgba(79, 70, 229, 0.15)';
+                });
+
+                urlInput.addEventListener('blur', function () {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

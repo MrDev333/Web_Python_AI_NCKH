@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block title %}Home - Web AI{% endblock %}
+{% load static %}
+{% block content %}
+
+<main class="container mx-auto px-4 py-12">
+    <!-- Hero Section -->
+    <section class="text-center py-12 bg-base-200 rounded-xl shadow-md">
+        <h1 class="text-4xl font-bold mb-4">
+            CheckPhish Detects and Monitors Phishing and Scam Sites
+        </h1>
+        <p class="text-lg text-gray-600">
+            With CheckPhish, you can scan suspicious URLs and monitor for typosquats
+            and lookalike variants of a domain.
+        </p>
+    </section>
+
+    <!-- Tab Container -->
+    <div class="bg-base-200 p-6 rounded-xl shadow-md mt-12">
+        <!-- Tab Navigation -->
+        <div role="tablist" aria-label="Primary tabs" class="tabs tabs-boxed justify-center">
+            <button type="button" class="tab" role="tab" data-tab-target="email" aria-controls="panel-email"
+                aria-selected="false">
+                📧 Email Scanner
+            </button>
+
+            <button type="button" class="tab tab-active" role="tab" data-tab-target="url" aria-controls="panel-url"
+                aria-selected="true">
+                🌐 URL Scanner
+            </button>
+
+            <button type="button" class="tab" role="tab" data-tab-target="typo" aria-controls="panel-typo"
+                aria-selected="false">
+                🎯 Typosquat Monitoring
+            </button>
+
+            <button type="button" class="tab" role="tab" data-tab-target="takedown" aria-controls="panel-takedown"
+                aria-selected="false">
+                ⚡ Takedown
+            </button>
+        </div>
+
+        <!-- Tab Panels -->
+        <div class="mt-8">
+            <!-- Email Panel -->
+            <div id="panel-email" role="tabpanel" aria-labelledby="" data-tab-panel="email" class="tab-panel hidden">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">📧 Email Scanner</h3>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            Scan email content and attachments for phishing indicators: malicious links, suspicious
+                            headers,
+                            and social engineering patterns.
+                        </p>
+                    </div>
+                    <div>
+                        <label class="label"><span class="label-text">Paste email or raw headers</span></label>
+                        <textarea class="textarea textarea-bordered w-full" rows="5"
+                            placeholder="Paste raw email here..."></textarea>
+                        <div class="mt-3 flex justify-end">
+                            <button class="btn btn-primary">Scan Email</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- URL Panel (default visible) -->
+            <div id="panel-url" role="tabpanel" data-tab-panel="url" class="tab-panel">
+                <div class="flex gap-2">
+                    <input type="url" placeholder="Scan a URL" class="input input-bordered w-full" id="urlInput"
+                        aria-label="Scan a URL">
+                    <button class="btn btn-primary" onclick="scanUrl()">Scan</button>
+                </div>
+
+                <div class="mt-6 text-gray-700 dark:text-gray-300 leading-relaxed">
+                    CheckPhish is a free real-time URL scanner providing deep threat intelligence,
+                    including screenshots, certificates, DOM Tree, and hosting details.
+                    Monitors 3000+ brands, flagging potential brand impersonation.
+                </div>
+
+                <div class="mt-4 text-sm">
+                    If you want to do more than one scan, automate a scan with
+                    <a href="#api" class="link link-primary">API</a> or use a proxy for scanning,
+                    please <a href="#signup" class="link link-secondary">signup</a> here!
+                </div>
+            </div>
+
+            <!-- Typosquat Panel -->
+            <div id="panel-typo" role="tabpanel" data-tab-panel="typo" class="tab-panel hidden">
+                <h3 class="text-xl font-semibold mb-2">🎯 Typosquat Monitoring</h3>
+                <p class="text-sm text-gray-700 dark:text-gray-300">
+                    Monitor domain permutations and newly registered domains that look similar to your brand. Get alerts
+                    and similarity scores.
+                </p>
+            </div>
+
+            <!-- Takedown Panel -->
+            <div id="panel-takedown" role="tabpanel" data-tab-panel="takedown" class="tab-panel hidden">
+                <h3 class="text-xl font-semibold mb-2">⚡ Takedown</h3>
+                <p class="text-sm text-gray-700 dark:text-gray-300">
+                    Request takedown actions for confirmed phishing sites. We provide evidence packages and workflow to
+                    speed up response with registrars/hosting providers.
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Script: Tab switching + simple scanUrl placeholder -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabButtons = Array.from(document.querySelectorAll('[data-tab-target]'));
+        const panels = Array.from(document.querySelectorAll('[data-tab-panel]'));
+
+        function activateTab(target) {
+            // update buttons
+            tabButtons.forEach(btn => {
+                const isActive = btn.getAttribute('data-tab-target') === target;
+                btn.classList.toggle('tab-active', isActive);
+                btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            });
+
+            // update panels
+            panels.forEach(panel => {
+                const show = panel.getAttribute('data-tab-panel') === target;
+                panel.classList.toggle('hidden', !show);
+                panel.setAttribute('aria-hidden', show ? 'false' : 'true');
+            });
+        }
+
+        // click + keyboard handlers
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                activateTab(btn.getAttribute('data-tab-target'));
+                // optional: update url hash
+                history.replaceState(null, '', '#' + btn.getAttribute('data-tab-target'));
+            });
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    btn.click();
+                }
+                // Optional: left/right arrow navigation
+                if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                    const idx = tabButtons.indexOf(btn);
+                    const nextIdx = (e.key === 'ArrowRight') ? (idx + 1) % tabButtons.length : (idx - 1 + tabButtons.length) % tabButtons.length;
+                    tabButtons[nextIdx].focus();
+                }
+            });
+        });
+
+        // Initial activation: prefer url hash -> tab-active in markup -> first tab
+        const hash = location.hash ? location.hash.substring(1) : null;
+        const validTargets = tabButtons.map(b => b.getAttribute('data-tab-target'));
+        if (hash && validTargets.includes(hash)) {
+            activateTab(hash);
+        } else {
+            const initial = document.querySelector('.tab.tab-active[data-tab-target]');
+            activateTab(initial ? initial.getAttribute('data-tab-target') : validTargets[0]);
+        }
+    });
+
+    // simple placeholder for scanUrl (replace with your implementation)
+    function scanUrl() {
+        const url = document.getElementById('urlInput').value.trim();
+        if (!url) {
+            return alert('Please enter a URL to scan.');
+        }
+        // Replace this with your actual scan logic / API call
+        alert('Scanning: ' + url + '\n(Replace this placeholder with real scan logic.)');
+    }
+</script>
+
+{% endblock %}
