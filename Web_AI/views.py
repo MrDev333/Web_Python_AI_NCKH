@@ -46,12 +46,12 @@ def signup(request):
         form = UserCreationForm()
         
     # Truyền form ra template
-    return render(request, 'registration/signup.html', {'form': form})
+    return render(request, 'accounts/signup.html', {'form': form})
 
 @login_required
 def profile(request):
-    return render(request, 'registration/profile.html')
+    return render(request, 'accounts/profile.html')
 
 @login_required
 def settings_view(request):
-    return render(request, 'registration/settings.html')
+    return render(request, 'accounts/settings.html')
