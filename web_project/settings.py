@@ -57,7 +57,9 @@ AUTHENTICATION_BACKENDS = [
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Có thể là 'mandatory', 'optional', hoặc 'none'
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
