@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .forms import UserRegisterForm
 
 
 def home(request):
@@ -45,3 +47,11 @@ def signup(request):
         
     # Truyền form ra template
     return render(request, 'registration/signup.html', {'form': form})
+
+@login_required
+def profile(request):
+    return render(request, 'registration/profile.html')
+
+@login_required
+def settings_view(request):
+    return render(request, 'registration/settings.html')

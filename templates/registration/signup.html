@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %}Đăng ký - LocationAI{% endblock %}
+{% block title %}Đăng ký{% endblock %}
 
 {% block content %}
 <div class="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-base-200">
     <div class="w-full max-w-md">
         <div class="card shadow-xl bg-base-100">
             <div class="card-body">
-                <h2 class="text-center text-2xl font-bold">Đăng ký LocationAI</h2>
+                <h2 class="text-center text-2xl font-bold">Đăng ký</h2>
                 <p class="text-center text-sm text-base-content/70">
                     Tạo tài khoản mới để bắt đầu sử dụng dịch vụ
                 </p>
@@ -99,4 +99,39 @@
         </div>
     </div>
 </div>
+
+<!-- Password Strength Indicator Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const password1 = document.getElementById('id_password1');
+        const password2 = document.getElementById('id_password2');
+
+        // Real-time password confirmation validation
+        password2.addEventListener('input', function () {
+            if (password1.value !== password2.value) {
+                password2.setCustomValidity('Mật khẩu không khớp');
+                password2.classList.add('border-red-500');
+                password2.classList.remove('border-gray-300', 'dark:border-gray-600');
+            } else {
+                password2.setCustomValidity('');
+                password2.classList.remove('border-red-500');
+                password2.classList.add('border-gray-300', 'dark:border-gray-600');
+            }
+        });
+
+        // Add focus effects
+        const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function () {
+                this.classList.add('ring-2', 'ring-blue-500', 'border-blue-500');
+            });
+
+            input.addEventListener('blur', function () {
+                this.classList.remove('ring-2', 'ring-blue-500', 'border-blue-500');
+            });
+        });
+    });
+</script>
+
+
 {% endblock %}
