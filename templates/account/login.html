@@ -39,7 +39,7 @@
                             <span class="label-text">Email đăng nhập</span>
                         </div>
                         <input type="email" name="{{ form.login.name }}" value="{{ form.login.value|default:'' }}"
-                           placeholder="Nhập địa chỉ email của bạn" class="input input-bordered w-full" required />
+                            placeholder="Nhập địa chỉ email của bạn" class="input input-bordered w-full" required />
                         {% if form.login.errors %}
                         <div class="label">
                             <span class="label-text-alt text-error">
@@ -69,7 +69,7 @@
                         {% endif %}
                     </label>
                     {% for field in form.hidden_fields %}
-                        {{ field}}
+                    {{ field}}
                     {% endfor %}
                     <div class="flex items-center justify-between">
                         <label class="flex items-center gap-2 cursor-pointer">
@@ -94,7 +94,6 @@
                     </svg>
                     <span>Google</span>
                 </a>
-
                 <!-- Sign Up -->
                 <p class="mt-6 text-center text-sm">
                     Chưa có tài khoản?

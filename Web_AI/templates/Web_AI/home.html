@@ -3,93 +3,727 @@
 {% load static %}
 
 {% block content %}
-<main class="min-h-screen bg-base-100">
+<style>
+    .fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
 
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .bounce-in {
+        animation: bounceIn 0.6s ease-out;
+    }
+
+    @keyframes bounceIn {
+        0% {
+            transform: scale(0.3);
+            opacity: 0;
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        70% {
+            transform: scale(0.9);
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .security-gradient {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%);
+    }
+
+    .glass-effect {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    .scan-animation {
+        animation: scan 3s infinite;
+    }
+
+    @keyframes scan {
+
+        0%,
+        100% {
+            transform: translateX(-100%);
+        }
+
+        50% {
+            transform: translateX(100%);
+        }
+    }
+
+    .typing-animation {
+        overflow: hidden;
+        border-right: 2px solid;
+        white-space: nowrap;
+        animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+        from {
+            width: 0;
+        }
+
+        to {
+            width: 100%;
+        }
+    }
+
+    @keyframes blink-caret {
+
+        from,
+        to {
+            border-color: transparent;
+        }
+
+        50% {
+            border-color: currentColor;
+        }
+    }
+</style>
+</head>
+
+<body class="min-h-screen bg-base-200">
     <!-- Hero Section -->
-    <section class="hero bg-base-200 py-16 px-6">
-        <div class="hero-content text-center">
-            <div class="max-w-2xl">
-                <h1 class="text-5xl font-bold">CheckPhish</h1>
-                <p class="py-6 text-lg text-gray-600">
-                    Bảo vệ bạn khỏi phishing, scam và các mối đe dọa trực tuyến.
-                    Quét URL, email đáng ngờ, theo dõi domain giả mạo và hành động ngay lập tức.
-                </p>
-                <a href="#scanner" class="btn btn-primary">Bắt đầu quét ngay</a>
+    <section class="security-gradient text-white py-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center fade-in">
+                <div class="mb-8">
+                    <div
+                        class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6 pulse-animation">
+                        <i class="fas fa-shield-alt text-5xl"></i>
+                    </div>
+                    <h1 class="text-6xl md:text-7xl font-bold mb-6 typing-animation">
+                        CheckPhish
+                    </h1>
+                    <p class="text-2xl max-w-4xl mx-auto leading-relaxed mb-8">
+                        Bảo vệ bạn khỏi phishing, scam và các mối đe dọa trực tuyến.<br>
+                        <span class="text-yellow-300 font-semibold">Quét URL, email đáng ngờ, theo dõi domain giả mạo và
+                            hành động ngay lập tức.</span>
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                        <a href="#scanner"
+                            class="btn btn-lg btn-primary glass-effect hover:scale-105 transition-transform">
+                            <i class="fas fa-search mr-2"></i>Bắt đầu quét ngay
+                        </a>
+                        <a href="#features"
+                            class="btn btn-lg btn-outline btn-white hover:scale-105 transition-transform">
+                            <i class="fas fa-play mr-2"></i>Xem demo
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Stats -->
+                <div class="stats stats-vertical lg:stats-horizontal shadow-2xl glass-effect">
+                    <div class="stat">
+                        <div class="stat-figure text-white">
+                            <i class="fas fa-link text-3xl"></i>
+                        </div>
+                        <div class="stat-title text-white/80">URL đã quét</div>
+                        <div class="stat-value text-white">1.2M+</div>
+                        <div class="stat-desc text-white/70">Trong 12 tháng qua</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-figure text-white">
+                            <i class="fas fa-envelope text-3xl"></i>
+                        </div>
+                        <div class="stat-title text-white/80">Email phân tích</div>
+                        <div class="stat-value text-white">850K+</div>
+                        <div class="stat-desc text-white/70">Bởi AI & Machine Learning</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-figure text-white">
+                            <i class="fas fa-globe text-3xl"></i>
+                        </div>
+                        <div class="stat-title text-white/80">Domain theo dõi</div>
+                        <div class="stat-value text-white">3K+</div>
+                        <div class="stat-desc text-white/70">Thương hiệu toàn cầu</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-figure text-white">
+                            <i class="fas fa-users text-3xl"></i>
+                        </div>
+                        <div class="stat-title text-white/80">Người dùng tin tưởng</div>
+                        <div class="stat-value text-white">50K+</div>
+                        <div class="stat-desc text-white/70">Trên toàn thế giới</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Features -->
-    <section class="py-16 px-6 max-w-6xl mx-auto">
-        <h2 class="text-3xl font-bold text-center mb-12">Tính năng nổi bật</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="card bg-base-200 shadow-md p-6">
-                <h3 class="text-xl font-semibold mb-2">📧 Email Scanner</h3>
-                <p>Phát hiện email lừa đảo, kiểm tra tiêu đề, liên kết, và cảnh báo nội dung nguy hiểm.</p>
-            </div>
-            <div class="card bg-base-200 shadow-md p-6">
-                <h3 class="text-xl font-semibold mb-2">🌐 URL Scanner</h3>
-                <p>Quét liên kết đáng ngờ, phân tích chứng chỉ SSL, nội dung trang, và so sánh với blacklist.</p>
-            </div>
-            <div class="card bg-base-200 shadow-md p-6">
-                <h3 class="text-xl font-semibold mb-2">🎯 Typosquat Monitoring</h3>
-                <p>Theo dõi các domain tương tự (lookalike) có nguy cơ giả mạo thương hiệu của bạn.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Scanner Tabs -->
-    <section id="scanner" class="py-16 px-6 bg-base-200">
-        <h2 class="text-3xl font-bold text-center mb-8">Dùng thử ngay</h2>
-        <div role="tablist" class="tabs tabs-boxed justify-center mb-6">
-            <input type="radio" name="tab-example" role="tab" class="tab" aria-label="Email Scanner" />
-            <input type="radio" name="tab-example" role="tab" class="tab tab-active" aria-label="URL Scanner" checked />
-            <input type="radio" name="tab-example" role="tab" class="tab" aria-label="Typosquat Monitoring" />
-            <input type="radio" name="tab-example" role="tab" class="tab" aria-label="Takedown" />
-        </div>
-
-        <div class="max-w-2xl mx-auto">
-            <div class="flex gap-2">
-                <input type="url" placeholder="Nhập URL cần kiểm tra" class="input input-bordered w-full" />
-                <button class="btn btn-primary">Scan</button>
-            </div>
-            <p class="text-center mt-4 text-gray-500">
-                Hệ thống sẽ phân tích URL, kiểm tra blacklist, chứng chỉ, và các dấu hiệu phishing.
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16 fade-in">
+            <h2 class="text-5xl font-bold mb-6">
+                <i class="fas fa-star text-primary mr-3"></i>Tính năng nổi bật
+            </h2>
+            <p class="text-xl text-base-content/70 max-w-3xl mx-auto">
+                Hệ thống bảo mật toàn diện với công nghệ AI tiên tiến
             </p>
         </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Email Scanner -->
+            <div
+                class="card bg-base-100 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 fade-in">
+                <div class="card-body text-center">
+                    <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-envelope-open-text text-primary text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-primary">Email Scanner</h3>
+                    <p class="text-base-content/70 mb-6">
+                        Phát hiện email lừa đảo, kiểm tra tiêu đề, liên kết, và cảnh báo nội dung nguy hiểm với độ chính
+                        xác 99.8%.
+                    </p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Phân tích header email</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Kiểm tra liên kết độc hại</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">AI phát hiện nội dung lừa đảo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- URL Scanner -->
+            <div
+                class="card bg-base-100 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 fade-in">
+                <div class="card-body text-center">
+                    <div class="w-20 h-20 bg-info/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-globe text-info text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-info">URL Scanner</h3>
+                    <p class="text-base-content/70 mb-6">
+                        Quét liên kết đáng ngờ, phân tích chứng chỉ SSL, nội dung trang, và so sánh với blacklist toàn
+                        cầu.
+                    </p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Kiểm tra SSL/TLS</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Phân tích nội dung trang</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">So sánh blacklist real-time</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typosquat Monitoring -->
+            <div
+                class="card bg-base-100 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 fade-in">
+                <div class="card-body text-center">
+                    <div class="w-20 h-20 bg-warning/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-eye text-warning text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-warning">Typosquat Monitoring</h3>
+                    <p class="text-base-content/70 mb-6">
+                        Theo dõi các domain tương tự (lookalike) có nguy cơ giả mạo thương hiệu của bạn 24/7.
+                    </p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Giám sát domain lookalike</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Cảnh báo real-time</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Báo cáo chi tiết</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Detection -->
+            <div
+                class="card bg-base-100 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 fade-in">
+                <div class="card-body text-center">
+                    <div class="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-brain text-success text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-success">AI Detection</h3>
+                    <p class="text-base-content/70 mb-6">
+                        Công nghệ Machine Learning tiên tiến phát hiện các mẫu tấn công mới và chưa biết.
+                    </p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Deep Learning Analysis</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Pattern Recognition</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Continuous Learning</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-time Protection -->
+            <div
+                class="card bg-base-100 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 fade-in">
+                <div class="card-body text-center">
+                    <div class="w-20 h-20 bg-error/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-virus text-error text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-error">Real-time Protection</h3>
+                    <p class="text-base-content/70 mb-6">
+                        Bảo vệ liên tục với cập nhật threat intelligence mỗi giây từ mạng lưới toàn cầu.
+                    </p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Cập nhật mỗi giây</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Global threat network</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Instant blocking</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Integration -->
+            <div
+                class="card bg-base-100 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 fade-in">
+                <div class="card-body text-center">
+                    <div class="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-code text-purple-500 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-purple-500">API Integration</h3>
+                    <p class="text-base-content/70 mb-6">
+                        Tích hợp dễ dàng vào hệ thống hiện tại với RESTful API và SDK đa nền tảng.
+                    </p>
+                    <div class="space-y-2 text-left">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">RESTful API</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Multi-platform SDK</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check text-success"></i>
+                            <span class="text-sm">Comprehensive docs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <!-- Stats -->
-    <section class="py-16 px-6 max-w-6xl mx-auto">
-        <h2 class="text-3xl font-bold text-center mb-12">CheckPhish trong con số</h2>
-        <div class="stats shadow flex flex-col md:flex-row">
-            <div class="stat">
-                <div class="stat-title">URL đã quét</div>
-                <div class="stat-value">1.2M+</div>
-                <div class="stat-desc">Trong 12 tháng qua</div>
+    <!-- Scanner Section -->
+    <section id="scanner" class="py-20 px-6 bg-base-100">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12 fade-in">
+                <h2 class="text-5xl font-bold mb-6">
+                    <i class="fas fa-search text-primary mr-3"></i>Bắt đầu dùng thử miễn phí ngay hôm nay
+                </h2>
+                <p class="text-xl text-base-content/70">
+                    Kiểm tra URL, email hoặc domain ngay lập tức - hoàn toàn miễn phí
+                </p>
             </div>
-            <div class="stat">
-                <div class="stat-title">Email phân tích</div>
-                <div class="stat-value">850K+</div>
-                <div class="stat-desc">Bởi AI & Machine Learning</div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8 fade-in">
+                <a href="{% url 'scanner' %}"
+                    class="btn btn-lg btn-outline btn-white glass-effect hover:scale-105 transition-transform">
+                    <i class="fas fa-rocket mr-2"></i>Dùng thử miễn phí ngay
+                </a>
             </div>
-            <div class="stat">
-                <div class="stat-title">Domain theo dõi</div>
-                <div class="stat-value">3K+</div>
-                <div class="stat-desc">Thương hiệu toàn cầu</div>
+        </div>
+    </section>
+
+
+    <!-- Testimonials Section -->
+    <section class="py-20 px-6 bg-base-100">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-5xl font-bold mb-6">
+                    <i class="fas fa-quote-left text-primary mr-3"></i>Khách hàng nói gì
+                </h2>
+                <p class="text-xl text-base-content/70">
+                    Hơn 50,000 khách hàng tin tưởng CheckPhish
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card bg-base-200 shadow-xl fade-in">
+                    <div class="card-body">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="avatar">
+                                <div
+                                    class="w-12 rounded-full bg-primary text-primary-content flex items-center justify-center">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Nguyễn Văn A</h4>
+                                <p class="text-sm text-base-content/70">IT Manager, ABC Corp</p>
+                            </div>
+                        </div>
+                        <p class="text-base-content/80">
+                            "CheckPhish đã giúp công ty chúng tôi ngăn chặn hàng trăm cuộc tấn công phishing.
+                            Hệ thống rất chính xác và dễ sử dụng."
+                        </p>
+                        <div class="rating rating-sm mt-4">
+                            <input type="radio" name="rating-1" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-1" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-1" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-1" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-1" class="mask mask-star-2 bg-orange-400" checked />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-200 shadow-xl fade-in">
+                    <div class="card-body">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="avatar">
+                                <div
+                                    class="w-12 rounded-full bg-success text-success-content flex items-center justify-center">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Trần Thị B</h4>
+                                <p class="text-sm text-base-content/70">Security Analyst, XYZ Bank</p>
+                            </div>
+                        </div>
+                        <p class="text-base-content/80">
+                            "API của CheckPhish tích hợp rất mượt mà vào hệ thống hiện tại.
+                            Tốc độ phản hồi nhanh và độ chính xác cao."
+                        </p>
+                        <div class="rating rating-sm mt-4">
+                            <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" checked />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-200 shadow-xl fade-in">
+                    <div class="card-body">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="avatar">
+                                <div
+                                    class="w-12 rounded-full bg-info text-info-content flex items-center justify-center">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Lê Văn C</h4>
+                                <p class="text-sm text-base-content/70">CISO, Tech Startup</p>
+                            </div>
+                        </div>
+                        <p class="text-base-content/80">
+                            "Từ khi sử dụng CheckPhish, chúng tôi chưa bao giờ bị tấn công phishing thành công.
+                            Đây là giải pháp bảo mật tuyệt vời!"
+                        </p>
+                        <div class="rating rating-sm mt-4">
+                            <input type="radio" name="rating-3" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-3" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-3" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-3" class="mask mask-star-2 bg-orange-400" />
+                            <input type="radio" name="rating-3" class="mask mask-star-2 bg-orange-400" checked />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Call to Action -->
-    <section class="py-16 bg-primary text-primary-content text-center">
-        <h2 class="text-4xl font-bold mb-4">Bảo vệ doanh nghiệp của bạn ngay hôm nay</h2>
-        <p class="mb-6">Dùng thử miễn phí hoặc nâng cấp để có trải nghiệm đầy đủ.</p>
-        <a href="#signup" class="btn btn-secondary">Đăng ký ngay</a>
+    <section id="signup" class="py-20 gradient-bg text-white text-center">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto fade-in">
+                <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                    Bảo vệ doanh nghiệp của bạn ngay hôm nay
+                </h2>
+                <p class="text-xl mb-8 leading-relaxed">
+                    Tham gia cùng hàng nghìn doanh nghiệp đã tin tưởng CheckPhish để bảo vệ khỏi các mối đe dọa trực
+                    tuyến.
+                    <br>Dùng thử miễn phí hoặc nâng cấp để có trải nghiệm đầy đủ.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                    <a href="{% url 'scanner' %}"
+                        class="btn btn-lg btn-secondary glass-effect hover:scale-105 transition-transform">
+                        <i class="fas fa-rocket mr-2"></i>Dùng thử miễn phí
+                    </a>
+                    <a href="{% url 'contact' %}"
+                        class="btn btn-lg btn-outline btn-white hover:scale-105 transition-transform">
+                        <i class="fas fa-phone mr-2"></i>Liên hệ tư vấn
+                    </a>
+                </div>
+                <div class="text-center">
+                    <p class="text-white/80 mb-4">Được tin tưởng bởi:</p>
+                    <div class="flex flex-wrap justify-center items-center gap-8 opacity-70">
+                        <div class="text-2xl font-bold">🏦 VietcomBank</div>
+                        <div class="text-2xl font-bold">🏢 FPT Software</div>
+                        <div class="text-2xl font-bold">🚀 VinGroup</div>
+                        <div class="text-2xl font-bold">📱 Zalo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <!-- Footer -->
+    <script>
+        // Tab switching functionality
+        const tabs = document.querySelectorAll('input[name="scanner-tab"]');
+        const tabContents = document.querySelectorAll('.tab-content');
 
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('change', function () {
+                if (this.checked) {
+                    tabContents.forEach(content => content.classList.add('hidden'));
+                    tabContents[index].classList.remove('hidden');
+                }
+            });
+        });
 
-</main>
-{% endblock %}
+        // Scanner functionality
+        const scanButtons = {
+            'scan-url-btn': 'url-input',
+            'scan-email-btn': 'email-content',
+            'monitor-domain-btn': 'domain-input',
+            'bulk-scan-btn': 'bulk-urls'
+        };
+
+        Object.keys(scanButtons).forEach(buttonId => {
+            const button = document.getElementById(buttonId);
+            const input = document.getElementById(scanButtons[buttonId]);
+
+            if (button && input) {
+                button.addEventListener('click', function () {
+                    const value = input.value.trim();
+                    if (!value) {
+                        alert('Vui lòng nhập thông tin cần kiểm tra!');
+                        return;
+                    }
+
+                    performScan(buttonId, value);
+                });
+            }
+        });
+
+        function performScan(scanType, value) {
+            const resultsDiv = document.getElementById('scan-results');
+            const resultsContent = document.getElementById('results-content');
+            const button = document.getElementById(scanType);
+
+            // Show loading state
+            const originalText = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang quét...';
+
+            // Simulate scan process
+            setTimeout(() => {
+                // Generate mock results based on scan type
+                let results = generateMockResults(scanType, value);
+
+                resultsContent.innerHTML = results;
+                resultsDiv.classList.remove('hidden');
+
+                // Reset button
+                button.disabled = false;
+                button.innerHTML = originalText;
+
+                // Scroll to results
+                resultsDiv.scrollIntoView({ behavior: 'smooth' });
+            }, 2000 + Math.random() * 2000); // Random delay 2-4 seconds
+        }
+
+        function generateMockResults(scanType, value) {
+            const riskLevel = Math.random();
+            let riskClass, riskText, riskIcon;
+
+            if (riskLevel < 0.3) {
+                riskClass = 'alert-success';
+                riskText = 'An toàn';
+                riskIcon = 'fa-shield-alt';
+            } else if (riskLevel < 0.7) {
+                riskClass = 'alert-warning';
+                riskText = 'Cảnh báo';
+                riskIcon = 'fa-exclamation-triangle';
+            } else {
+                riskClass = 'alert-error';
+                riskText = 'Nguy hiểm';
+                riskIcon = 'fa-skull-crossbones';
+            }
+
+            return `
+                    <div class="alert ${riskClass} shadow-lg">
+                        <div>
+                            <i class="fas ${riskIcon} text-2xl"></i>
+                            <div>
+                                <h3 class="font-bold text-lg">Kết quả quét: ${riskText}</h3>
+                                <div class="text-sm opacity-75">Đã quét: ${value}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div class="card bg-base-100 shadow-lg">
+                            <div class="card-body">
+                                <h4 class="card-title text-lg">
+                                    <i class="fas fa-chart-pie text-primary mr-2"></i>Phân tích chi tiết
+                                </h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span>SSL Certificate:</span>
+                                        <span class="badge badge-success">Valid</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Blacklist Status:</span>
+                                        <span class="badge badge-success">Clean</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Reputation Score:</span>
+                                        <span class="badge badge-info">${Math.floor(Math.random() * 40 + 60)}/100</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Risk Level:</span>
+                                        <span class="badge ${riskClass.replace('alert-', 'badge-')}">${riskText}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card bg-base-100 shadow-lg">
+                            <div class="card-body">
+                                <h4 class="card-title text-lg">
+                                    <i class="fas fa-info-circle text-info mr-2"></i>Thông tin bổ sung
+                                </h4>
+                                <div class="space-y-2 text-sm">
+                                    <p><strong>Thời gian quét:</strong> ${new Date().toLocaleString('vi-VN')}</p>
+                                    <p><strong>Phương thức:</strong> AI + Machine Learning</p>
+                                    <p><strong>Database:</strong> Global Threat Intelligence</p>
+                                    <p><strong>Độ tin cậy:</strong> ${Math.floor(Math.random() * 20 + 80)}%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-6">
+                        <button class="btn btn-primary" onclick="document.getElementById('scan-results').classList.add('hidden')">
+                            <i class="fas fa-search mr-2"></i>Quét URL khác
+                        </button>
+                        <button class="btn btn-outline btn-secondary ml-2">
+                            <i class="fas fa-download mr-2"></i>Tải báo cáo
+                        </button>
+                    </div>
+                `;
+        }
+
+        // Smooth animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive effects
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-5px)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+    {% endblock %}

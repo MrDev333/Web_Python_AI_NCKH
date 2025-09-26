@@ -3,14 +3,440 @@
 {% block title %}Liên hệ{% endblock %}
 x
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <!-- Hero Section -->
-    <div class="text-center mb-16">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6">Liên hệ với chúng tôi</h1>
-        <p class="text-l max-w-3xl mx-auto">
-            Chúng tôi luôn sẵn sàng lắng nghe ý kiến và hỗ trợ bạn. Hãy liên hệ với chúng tôi qua các kênh dưới đây.
-        </p>
+<style>
+    .fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .bounce-in {
+        animation: bounceIn 0.6s ease-out;
+    }
+
+    @keyframes bounceIn {
+        0% {
+            transform: scale(0.3);
+            opacity: 0;
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        70% {
+            transform: scale(0.9);
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .glass-effect {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+</style>
+
+<body class="min-h-screen bg-base-200">
+    <div class="gradient-bg text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center fade-in">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                    <i class="fas fa-envelope mr-4"></i>Liên hệ với chúng tôi
+                </h1>
+                <p class="text-xl max-w-3xl mx-auto leading-relaxed">
+                    Chúng tôi luôn sẵn sàng lắng nghe ý kiến và hỗ trợ bạn. Hãy liên hệ với chúng tôi qua các kênh dưới
+                    đây.
+                </p>
+                <div class="mt-8">
+                    <div class="stats stats-horizontal shadow glass-effect">
+                        <div class="stat">
+                            <div class="stat-figure text-primary">
+                                <i class="fas fa-clock text-2xl"></i>
+                            </div>
+                            <div class="stat-title text-white">Phản hồi trong</div>
+                            <div class="stat-value text-white">24h</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-figure text-secondary">
+                                <i class="fas fa-users text-2xl"></i>
+                            </div>
+                            <div class="stat-title text-white">Khách hàng hài lòng</div>
+                            <div class="stat-value text-white">99%</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-figure text-accent">
+                                <i class="fas fa-headset text-2xl"></i>
+                            </div>
+                            <div class="stat-title text-white">Hỗ trợ</div>
+                            <div class="stat-value text-white">24/7</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+    <div class="container mx-auto px-4 py-16">
+        <div id="main-content" class="max-w-6xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="space-y-8 fade-in">
+                    <div class="card bg-base-100 shadow-2xl hover:shadow-3xl transition-all duration-300">
+                        <div class="card-body">
+                            <h2 class="card-title text-3xl mb-6 text-primary">
+                                <i class="fas fa-info-circle mr-2"></i>Thông tin liên hệ
+                            </h2>
+
+                            <div class="space-y-6">
+                                <div class="flex items-center gap-4 p-4 rounded-lg hover:bg-base-200 transition-colors">
+                                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-map-marker-alt text-primary text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">Địa chỉ</h4>
+                                        <p class="text-base-content/70">Đại học Phan Thiết, Lâm Đồng, Việt Nam</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-4 p-4 rounded-lg hover:bg-base-200 transition-colors">
+                                    <div class="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-phone text-success text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">Điện thoại</h4>
+                                        <p class="text-base-content/70">
+                                            <a href="tel:+84123456789" class="hover:text-success transition-colors">+84
+                                                946754751</a>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-4 p-4 rounded-lg hover:bg-base-200 transition-colors">
+                                    <div class="w-12 h-12 bg-info/10 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-envelope text-info text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">Email</h4>
+                                        <p class="text-base-content/70">
+                                            <a href="mailto:contact@example.com"
+                                                class="hover:text-info transition-colors">fhishing@gmail.com</a>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-4 p-4 rounded-lg hover:bg-base-200 transition-colors">
+                                    <div class="w-12 h-12 bg-warning/10 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-clock text-warning text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-lg">Giờ làm việc</h4>
+                                        <p class="text-base-content/70">Thứ 2 - Thứ 6: 8:00 - 17:00</p>
+                                        <p class="text-base-content/70">Thứ 7: 8:00 - 12:00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="text-center">
+                                <h4 class="font-semibold text-lg mb-4">Theo dõi chúng tôi</h4>
+                                <div class="flex justify-center gap-4">
+                                    <a href="#" class="btn btn-circle btn-outline btn-primary hover:btn-primary">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-circle btn-outline btn-info hover:btn-info">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-circle btn-outline btn-error hover:btn-error">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-circle btn-outline btn-success hover:btn-success">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fade-in">
+                    <div class="card bg-base-100 shadow-2xl hover:shadow-3xl transition-all duration-300">
+                        <div class="card-body">
+                            <h2 class="card-title text-3xl mb-6 text-primary">
+                                <i class="fas fa-paper-plane mr-2"></i>Gửi tin nhắn
+                            </h2>
+
+                            <form id="contactForm" class="space-y-6">
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">
+                                                <i class="fas fa-user mr-1"></i>Họ và tên *
+                                            </span>
+                                        </label>
+                                        <input type="text" name="name" required
+                                            class="input input-bordered w-full focus:input-primary"
+                                            placeholder="Nhập họ và tên của bạn" />
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">
+                                                <i class="fas fa-envelope mr-1"></i>Email *
+                                            </span>
+                                        </label>
+                                        <input type="email" name="email" required
+                                            class="input input-bordered w-full focus:input-primary"
+                                            placeholder="example@email.com" />
+                                    </div>
+                                </div>
+
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">
+                                                <i class="fas fa-phone mr-1"></i>Số điện thoại
+                                            </span>
+                                        </label>
+                                        <input type="tel" name="phone"
+                                            class="input input-bordered w-full focus:input-primary"
+                                            placeholder="+84 123 456 789" />
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">
+                                                <i class="fas fa-tag mr-1"></i>Chủ đề *
+                                            </span>
+                                        </label>
+                                        <select name="subject" required
+                                            class="select select-bordered w-full focus:select-primary">
+                                            <option value="">Chọn chủ đề</option>
+                                            <option value="general">Thông tin chung</option>
+                                            <option value="support">Hỗ trợ kỹ thuật</option>
+                                            <option value="business">Hợp tác kinh doanh</option>
+                                            <option value="feedback">Góp ý</option>
+                                            <option value="complaint">Khiếu nại</option>
+                                            <option value="other">Khác</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text font-medium">
+                                            <i class="fas fa-comment mr-1"></i>Tin nhắn *
+                                        </span>
+                                    </label>
+                                    <textarea name="message" required rows="6"
+                                        class="textarea textarea-bordered w-full resize-none focus:textarea-primary"
+                                        placeholder="Nhập nội dung tin nhắn của bạn... (tối thiểu 10 ký tự)"
+                                        minlength="10"></textarea>
+                                    <label class="label">
+                                        <span class="label-text-alt">
+                                            <span id="charCount">0</span>/500 ký tự
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="cursor-pointer label justify-start gap-3">
+                                        <input type="checkbox" required class="checkbox checkbox-primary" />
+                                        <span class="label-text">
+                                            Tôi đồng ý với <a href="#" class="link link-primary">điều khoản sử dụng</a>
+                                            và
+                                            <a href="#" class="link link-primary">chính sách bảo mật</a> *
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <button type="submit" id="submitBtn" class="btn btn-primary w-full btn-lg">
+                                    <i class="fas fa-paper-plane mr-2"></i>
+                                    <span id="btnText">Gửi tin nhắn</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="successMessage" class="hidden max-w-2xl mx-auto mt-8">
+            <div class="card bg-success text-success-content shadow-2xl bounce-in">
+                <div class="card-body text-center">
+                    <div
+                        class="w-20 h-20 bg-success-content/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Gửi thành công!</h3>
+                    <p class="text-lg">
+                        Cảm ơn bạn đã liên hệ với chúng tôi. Chúng tôi sẽ phản hồi trong thời gian sớm nhất có thể.
+                    </p>
+                    <div class="card-actions justify-center mt-4">
+                        <button id="backBtn" class="btn btn-outline">
+                            <i class="fas fa-arrow-left mr-2"></i>Gửi tin nhắn khác
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-base-100 py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">
+                    <i class="fas fa-question-circle mr-2 text-primary"></i>Câu hỏi thường gặp
+                </h2>
+                <p class="text-xl text-base-content/70">Một số câu hỏi phổ biến từ khách hàng</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="collapse collapse-plus bg-base-200 mb-4">
+                    <input type="radio" name="faq-accordion" checked="checked" />
+                    <div class="collapse-title text-xl font-medium">
+                        Thời gian phản hồi là bao lâu?
+                    </div>
+                    <div class="collapse-content">
+                        <p>Chúng tôi cam kết phản hồi trong vòng 24 giờ làm việc. Đối với các vấn đề khẩn cấp, vui lòng
+                            gọi trực tiếp hotline.</p>
+                    </div>
+                </div>
+
+                <div class="collapse collapse-plus bg-base-200 mb-4">
+                    <input type="radio" name="faq-accordion" />
+                    <div class="collapse-title text-xl font-medium">
+                        Tôi có thể liên hệ ngoài giờ làm việc không?
+                    </div>
+                    <div class="collapse-content">
+                        <p>Bạn có thể gửi tin nhắn bất cứ lúc nào. Chúng tôi sẽ xử lý và phản hồi vào giờ làm việc tiếp
+                            theo.</p>
+                    </div>
+                </div>
+
+                <div class="collapse collapse-plus bg-base-200 mb-4">
+                    <input type="radio" name="faq-accordion" />
+                    <div class="collapse-title text-xl font-medium">
+                        Thông tin cá nhân có được bảo mật không?
+                    </div>
+                    <div class="collapse-content">
+                        <p>Chúng tôi cam kết bảo vệ thông tin cá nhân của bạn theo chính sách bảo mật nghiêm ngặt.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Character counter for textarea
+        const messageTextarea = document.querySelector('textarea[name="message"]');
+        const charCount = document.getElementById('charCount');
+
+        messageTextarea.addEventListener('input', function () {
+            const count = this.value.length;
+            charCount.textContent = count;
+
+            if (count > 500) {
+                this.value = this.value.substring(0, 500);
+                charCount.textContent = 500;
+            }
+        });
+
+        // Form submission
+        const form = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const mainContent = document.getElementById('main-content');
+        const successMessage = document.getElementById('successMessage');
+        const backBtn = document.getElementById('backBtn');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            btnText.textContent = 'Đang gửi...';
+
+            // Simulate form submission delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Hide main content and show success message
+            mainContent.style.display = 'none';
+            successMessage.classList.remove('hidden');
+
+            // Scroll to success message
+            successMessage.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Back button functionality
+        backBtn.addEventListener('click', function () {
+            // Reset form
+            form.reset();
+            charCount.textContent = '0';
+
+            // Reset button state
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+            btnText.textContent = 'Gửi tin nhắn';
+
+            // Show main content and hide success message
+            mainContent.style.display = 'block';
+            successMessage.classList.add('hidden');
+
+            // Scroll to form
+            mainContent.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Form validation enhancements
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function () {
+                if (this.checkValidity()) {
+                    this.classList.remove('input-error', 'select-error', 'textarea-error');
+                    this.classList.add('input-success', 'select-success', 'textarea-success');
+                } else {
+                    this.classList.remove('input-success', 'select-success', 'textarea-success');
+                    this.classList.add('input-error', 'select-error', 'textarea-error');
+                }
+            });
+        });
+
+        // Smooth animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
 
 {% endblock %}

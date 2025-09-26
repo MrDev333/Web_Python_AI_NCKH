@@ -11,9 +11,11 @@
     <!-- Add Tailwind CSS for better styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- DaisyUI CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
     <!-- Add custom favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'Web_AI/favicon.ico' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
 </head>
 
 <body class="transition-colors duration-300" data-theme="light">
@@ -145,6 +147,14 @@
                             </svg>
                             Hồ sơ cá nhân
                         </a>
+                        <a href="{% url 'activate' %}" class="dropdown-item">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            Hoạt động
+                        </a>
                         <a href="{% url 'settings' %}" class="dropdown-item">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -157,14 +167,12 @@
                         <hr class="my-2">
                         <form action="{% url 'account_logout' %}" method="post">
                             {% csrf_token %}
-                            <button>
-                                <a class="dropdown-item text-red-600">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                    </svg>
-                                    Đăng xuất
-                            </button>
+                            <a href="{% url 'account_logout' %}" class="dropdown-item text-red-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                                Đăng xuất
                             </a>
                         </form>
 
@@ -204,8 +212,6 @@
         {% endblock %}
 
         <hr class="border-gray-200 dark:border-gray-700" />
-
-
     </div>
     <!-- Footer -->
     <footer>
@@ -319,57 +325,6 @@
             dropdown.classList.toggle('hidden');
         }
 
-        // Tab switching function
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            event.target.classList.add('active');
-
-            const input = document.getElementById('urlInput');
-            if (input) {
-                switch (tabName) {
-                    case 'email':
-                        input.placeholder = 'Nhập nội dung email để quét';
-                        break;
-                    case 'url':
-                        input.placeholder = 'Quét URL';
-                        break;
-                    case 'typo':
-                        input.placeholder = 'Nhập domain để theo dõi';
-                        break;
-                    case 'takedown':
-                        input.placeholder = 'Nhập URL độc hại để gỡ bỏ';
-                        break;
-                }
-            }
-        }
-
-        // URL scanning function
-        function scanUrl() {
-            const url = document.getElementById('urlInput')?.value;
-            if (!url || url.trim() === '') {
-                alert('Vui lòng nhập URL để quét');
-                return;
-            }
-
-            const scanBtn = document.querySelector('.scan-btn');
-            const originalText = scanBtn.textContent;
-            scanBtn.textContent = 'Đang quét...';
-            scanBtn.disabled = true;
-
-            // Show loading indicator
-            document.getElementById('loading-indicator').classList.remove('hidden');
-
-            setTimeout(() => {
-                scanBtn.textContent = originalText;
-                scanBtn.disabled = false;
-                document.getElementById('loading-indicator').classList.add('hidden');
-                alert('Quét hoàn thành! (Đây là demo)');
-            }, 2000);
-        }
-
         // Initialize everything when DOM is loaded
         document.addEventListener('DOMContentLoaded', function () {
             // Load saved theme
@@ -408,19 +363,6 @@
                 });
             });
 
-            // Enhanced URL input effects
-            const urlInput = document.getElementById('urlInput');
-            if (urlInput) {
-                urlInput.addEventListener('focus', function () {
-                    this.style.transform = 'translateY(-1px)';
-                    this.style.boxShadow = '0 4px 12px rgba(79, 70, 229, 0.15)';
-                });
-
-                urlInput.addEventListener('blur', function () {
-                    this.style.transform = 'translateY(0)';
-                    this.style.boxShadow = 'none';
-                });
-            }
         });
     </script>
 </body>

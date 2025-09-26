@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',  # Thêm dòng này để tích hợp Google
     'allauth.socialaccount.providers.facebook', # Thêm dòng này để tích hợp Facebook
+    'allauth.socialaccount.providers.github', # Thêm provider GitHub
+
 ]
 
 SITE_ID = 1
