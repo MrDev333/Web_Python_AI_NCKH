@@ -33,18 +33,43 @@
                 <!-- Form -->
                 <form method="post" class="mt-4 space-y-4">
                     {% csrf_token %}
-
-                    {% for field in form %}
+                    <!-- Login Field -->
                     <label class="form-control w-full">
                         <div class="label">
-                            <span class="label-text">{{ field.label }}</span>
+                            <span class="label-text">Email đăng nhập</span>
                         </div>
-                        {{ field }} {% if field.errors %}
+                        <input type="email" name="{{ form.login.name }}" value="{{ form.login.value|default:'' }}"
+                           placeholder="Nhập địa chỉ email của bạn" class="input input-bordered w-full" required />
+                        {% if form.login.errors %}
                         <div class="label">
-                            <span class="label-text-alt text-error">{{ field.errors.as_text }}</span>
+                            <span class="label-text-alt text-error">
+                                {% for error in form.login.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </span>
                         </div>
                         {% endif %}
                     </label>
+
+                    <!-- Password Field -->
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text">Mật khẩu</span>
+                        </div>
+                        <input type="password" name="{{ form.password.name }}" placeholder="Mật khẩu"
+                            class="input input-bordered w-full" required />
+                        {% if form.password.errors %}
+                        <div class="label">
+                            <span class="label-text-alt text-error">
+                                {% for error in form.password.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </span>
+                        </div>
+                        {% endif %}
+                    </label>
+                    {% for field in form.hidden_fields %}
+                        {{ field}}
                     {% endfor %}
                     <div class="flex items-center justify-between">
                         <label class="flex items-center gap-2 cursor-pointer">

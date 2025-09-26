@@ -49,13 +49,13 @@
                     </div>
                     {% endif %}
 
-                    <!-- Email Field -->
+                     <!-- Email Field -->
                     <label class="form-control w-full">
                         <div class="label">
                             <span class="label-text">Email *</span>
                         </div>
                         <input type="email" name="{{ form.email.name }}" value="{{ form.email.value|default:'' }}"
-                            placeholder="Nhập địa chỉ email của bạn" class="input input-bordered w-full" required />
+                           placeholder="Nhập địa chỉ email của bạn" class="input input-bordered w-full" required />
                         {% if form.email.errors %}
                         <div class="label">
                             <span class="label-text-alt text-error">
