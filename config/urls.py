@@ -31,5 +31,6 @@ urlpatterns = [
     path('users/', include('accounts.urls')),
     path('core/', include('core.urls')),
     path('accounts/', include('allauth.urls')),
+    path('email/', include('email_scan.urls', namespace='email_scan')),
 ]
 urlpatterns += staticfiles_urlpatterns()

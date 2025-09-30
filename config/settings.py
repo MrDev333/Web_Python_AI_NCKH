@@ -65,6 +65,24 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'  # Có thể là 'mandatory', 'optional', ho
 SOCIALACCOUNT_LOGIN_ON_GET = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+# Store social tokens in SocialToken model so we can call Google APIs
+SOCIALACCOUNT_STORE_TOKENS = True
+
+# Configure Google provider to request Gmail readonly scope and offline access
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/gmail.readonly',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
+            'prompt': 'consent',
+        }
+    }
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

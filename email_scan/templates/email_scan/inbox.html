@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Hộp thư Gmail{% endblock %}
+
+{% block content %}
+<div class="container p-6">
+  <h2>Hộp thư Gmail</h2>
+  <div id="alerts"></div>
+
+  <div id="inbox">
+    <button id="loadBtn" class="btn btn-primary">Tải hộp thư</button>
+    <div id="messages" style="margin-top:12px"></div>
+  </div>
+
+  <div id="preview" style="display:none; margin-top:16px;">
+    <h3>Nội dung email</h3>
+    <pre id="emailBody" style="white-space:pre-wrap; background:#f8f8f8; padding:12px"></pre>
+    <button id="closePreview" class="btn">Đóng</button>
+  </div>
+</div>
+
+<script>
+async function api(path, method='GET'){
+  const resp = await fetch(path, {method, headers:{'X-Requested-With':'XMLHttpRequest'}});
+  return resp.json();
+}
+
+document.getElementById('loadBtn').addEventListener('click', async function(){
+  const btn = this;
+  btn.disabled = true; btn.textContent = 'Đang tải...';
+  const data = await api('{% url "email_scan:api_list_messages" %}');
+  btn.disabled = false; btn.textContent = 'Tải hộp thư';
+  const messages = document.getElementById('messages');
+  messages.innerHTML = '';
+  if(data.error){ document.getElementById('alerts').innerHTML = '<div style="color:red">'+data.error+'</div>'; return }
+  (data.messages||[]).forEach(m=>{
+    const el = document.createElement('div');
+    el.style.border='1px solid #ddd'; el.style.padding='8px'; el.style.marginBottom='8px';
+    el.innerHTML = `<strong>${m.subject||'(Không tiêu đề)'}</strong><div style="font-size:0.9em;color:#666">${m.from||''} · ${m.date||''}</div><div style="margin-top:6px">${m.snippet||''}</div><div style="margin-top:6px"><button class="scanBtn" data-id="${m.id}">Quét</button></div>`;
+    messages.appendChild(el);
+  });
+  document.querySelectorAll('.scanBtn').forEach(b=>b.addEventListener('click', async (e)=>{
+    const id = e.currentTarget.dataset.id; e.currentTarget.disabled=true; e.currentTarget.textContent='Đang quét...';
+    const res = await api('{% url "email_scan:api_fetch_message" "MSGID" %}'.replace('MSGID', id));
+    e.currentTarget.disabled=false; e.currentTarget.textContent='Quét';
+    if(res.error){ document.getElementById('alerts').innerHTML = '<div style="color:red">'+res.error+'</div>'; return }
+    document.getElementById('emailBody').textContent = res.body || res.snippet || '(Không có nội dung)';
+    document.getElementById('preview').style.display = 'block';
+  }))
+});
+
+document.getElementById('closePreview').addEventListener('click', ()=>{
+  document.getElementById('preview').style.display = 'none';
+});
+</script>
+
+{% endblock %}

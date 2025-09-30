@@ -165,6 +165,173 @@
                                 </div>
                             </div>
 
+                        <!-- Gmail inbox widget (compact) -->
+                        <div class="mt-6">
+                            {% if user.is_authenticated %}
+                            <div class="card bg-base-100 shadow-md">
+                                <div class="card-body">
+                                    <h3 class="card-title mb-3"><i class="fas fa-inbox mr-2"></i> Hộp thư Gmail</h3>
+                                    <div id="gmail-alerts"></div>
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <button id="loadGmailBtn" class="btn btn-sm btn-primary">Tải hộp thư</button>
+                                        <span class="text-sm text-gray-500">Hiển thị tối đa 25 thư gần nhất</span>
+                                    </div>
+
+                                    <div id="gmailMessages" class="space-y-2 max-h-56 overflow-auto"></div>
+
+                                    <div id="gmailPreview" style="display:none; margin-top:12px;">
+                                        <h4 class="text-lg font-semibold">Nội dung email</h4>
+                                        <pre id="gmailEmailBody" style="white-space:pre-wrap; background:#f8f8f8; padding:10px; border-radius:6px;"></pre>
+                                        <div class="mt-2"><button id="closeGmailPreview" class="btn btn-ghost btn-sm">Đóng</button></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                (function(){
+                                    // Robust API helper: include credentials, handle non-JSON responses and HTTP errors
+                                    const api = async (path, method='GET') => {
+                                        try {
+                                            const r = await fetch(path, {
+                                                method,
+                                                credentials: 'same-origin',
+                                                headers: {
+                                                    'X-Requested-With': 'XMLHttpRequest',
+                                                    'Accept': 'application/json'
+                                                }
+                                            });
+
+                                            // If status is 401/403, try to parse JSON for error details, otherwise return structured error
+                                            if (!r.ok) {
+                                                const ct = r.headers.get('Content-Type') || '';
+                                                if (ct.includes('application/json')) {
+                                                    const j = await r.json().catch(()=>null);
+                                                    return { error: j?.error || (`HTTP ${r.status} ${r.statusText}`), status: r.status, ...(j || {}) };
+                                                }
+                                                const text = await r.text().catch(()=>null);
+                                                return { error: `HTTP ${r.status} ${r.statusText}`, status: r.status, text };
+                                            }
+
+                                            // Try to parse JSON, but be tolerant to non-json success responses
+                                            const ct = r.headers.get('Content-Type') || '';
+                                            if (ct.includes('application/json')) {
+                                                return await r.json();
+                                            }
+                                            const text = await r.text().catch(()=>null);
+                                            return { error: 'Unexpected response format from server', text };
+                                        } catch (err) {
+                                            console.error('Gmail widget fetch error', err);
+                                            return { error: err.message || String(err) };
+                                        }
+                                    };
+
+                                    const loadBtn = document.getElementById('loadGmailBtn');
+                                    const alerts = document.getElementById('gmail-alerts');
+                                    const list = document.getElementById('gmailMessages');
+
+                                    function showAlertHtml(html) {
+                                        alerts.innerHTML = html;
+                                    }
+
+                                    function renderMessages(messages) {
+                                        list.innerHTML = '';
+                                        if (!messages || messages.length === 0) {
+                                            list.innerHTML = '<div class="text-sm text-gray-500">Không có thư để hiển thị.</div>';
+                                            return;
+                                        }
+                                        messages.forEach(m => {
+                                            const item = document.createElement('div');
+                                            item.className = 'p-2 border rounded';
+                                            item.innerHTML = `
+                                                <div class="font-semibold">${m.subject || '(Không tiêu đề)'}</div>
+                                                <div class="text-xs text-gray-500">${m.from || ''} · ${m.date || ''}</div>
+                                                <div class="mt-1 text-sm">${m.snippet || ''}</div>
+                                                <div class="mt-2"><button class="btn btn-xs btn-outline gmailScanBtn" data-id="${m.id}">Quét</button></div>
+                                            `;
+                                            list.appendChild(item);
+                                        });
+
+                                        // attach handlers
+                                        list.querySelectorAll('.gmailScanBtn').forEach(b => {
+                                            b.addEventListener('click', async (e) => {
+                                                const id = e.currentTarget.dataset.id;
+                                                e.currentTarget.disabled = true; e.currentTarget.textContent = 'Đang quét...';
+                                                const res = await api('{% url "email_scan:api_fetch_message" "MSGID" %}'.replace('MSGID', id));
+                                                e.currentTarget.disabled = false; e.currentTarget.textContent = 'Quét';
+                                                if (res.error) {
+                                                    if (res.reauth_url) {
+                                                        showAlertHtml(`<div class="text-red-600 mb-2">${res.error}</div><a class="btn btn-sm btn-warning" href="${res.reauth_url}">Kết nối lại Google</a>`);
+                                                    } else {
+                                                        showAlertHtml(`<div class="text-red-600">${res.error}</div><pre class="text-xs mt-2">${res.text ? escapeHtml(res.text) : ''}</pre>`);
+                                                    }
+                                                    return;
+                                                }
+                                                const bodyPre = document.getElementById('gmailEmailBody');
+                                                if (res.html) {
+                                                    if (typeof DOMPurify === 'undefined') {
+                                                        const s = document.createElement('script');
+                                                        s.src = 'https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js';
+                                                        s.onload = () => { bodyPre.innerHTML = DOMPurify.sanitize(res.html); };
+                                                        document.head.appendChild(s);
+                                                    } else {
+                                                        bodyPre.innerHTML = DOMPurify.sanitize(res.html);
+                                                    }
+                                                } else {
+                                                    bodyPre.textContent = res.text || res.snippet || '(Không có nội dung)';
+                                                }
+                                                document.getElementById('gmailPreview').style.display = 'block';
+                                            });
+                                        });
+                                    }
+
+                                    function escapeHtml(s) {
+                                        if (!s) return '';
+                                        return s.replace(/[&<>"']/g, function (c) {
+                                            return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c];
+                                        });
+                                    }
+
+                                    if (loadBtn) {
+                                        loadBtn.addEventListener('click', async () => {
+                                            loadBtn.disabled = true; loadBtn.textContent = 'Đang tải...';
+                                            alerts.innerHTML = '';
+                                            list.innerHTML = '';
+
+                                            const data = await api('{% url "email_scan:api_list_messages" %}');
+
+                                            loadBtn.disabled = false; loadBtn.textContent = 'Tải hộp thư';
+
+                                            if (data.error) {
+                                                // If backend provides a reauth_url, show reconnect button
+                                                if (data.reauth_url) {
+                                                    showAlertHtml(`<div class="text-red-600 mb-2">${escapeHtml(data.error)}</div><a class="btn btn-sm btn-warning" href="${data.reauth_url}">Kết nối lại Google</a>`);
+                                                } else {
+                                                    showAlertHtml(`<div class="text-red-600">${escapeHtml(data.error)}</div><pre class="text-xs mt-2">${data.text ? escapeHtml(String(data.text)) : ''}</pre>`);
+                                                }
+                                                console.warn('Gmail API list error', data);
+                                                return;
+                                            }
+
+                                            // success: render messages
+                                            renderMessages(data.messages || []);
+                                        });
+                                    }
+
+                                    const closeBtn = document.getElementById('closeGmailPreview');
+                                    if (closeBtn) closeBtn.addEventListener('click', ()=>{ document.getElementById('gmailPreview').style.display = 'none'; });
+                                })();
+                            </script>
+
+                            {% else %}
+                            <div class="card bg-base-100 shadow-md">
+                                <div class="card-body">
+                                    <h3 class="card-title mb-2"><i class="fas fa-inbox mr-2"></i> Hộp thư Gmail</h3>
+                                    <p>Bạn chưa đăng nhập. Vui lòng <a href="{% url 'account_login' %}">đăng nhập</a> và kết nối Google để xem hộp thư.</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
                             <div
                                 class="card bg-base-100 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:-translate-y-2 fade-in">
                                 <div class="card-body">
@@ -499,14 +666,23 @@
                 });
             });
 
-            // Initial activation: prefer url hash -> tab-active in markup -> first tab
+            // Initial activation: prefer url hash -> tab-active in markup -> email for authenticated users -> first tab
             const hash = location.hash ? location.hash.substring(1) : null;
             const validTargets = tabButtons.map(b => b.getAttribute('data-tab-target'));
             if (hash && validTargets.includes(hash)) {
                 activateTab(hash);
             } else {
                 const initial = document.querySelector('.tab.tab-active[data-tab-target]');
-                activateTab(initial ? initial.getAttribute('data-tab-target') : validTargets[0]);
+                if (initial) {
+                    activateTab(initial.getAttribute('data-tab-target'));
+                } else {
+                    // Default to email tab for authenticated users, otherwise first tab
+                    {% if user.is_authenticated %}
+                    activateTab('email');
+                    {% else %}
+                    activateTab(validTargets[0]);
+                    {% endif %}
+                }
             }
         });
 
@@ -558,8 +734,12 @@
                 });
             });
 
-            // Initialize first tab
+            // Initialize first tab: prefer email for authenticated users
+            {% if user.is_authenticated %}
+            activateTab('email');
+            {% else %}
             activateTab('url');
+            {% endif %}
 
             // Enter key support for inputs
             document.getElementById('urlInput')?.addEventListener('keypress', function (e) {
