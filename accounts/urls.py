@@ -4,5 +4,5 @@ from accounts import views
 urlpatterns = [
     path("profile/", views.profile_view, name="profile"),
     path("settings/", views.settings_view, name="settings"),
-    path("activate/", views.activate_views, name="activate")
+    path("history/", views.activity_history_views, name="history")
 ]

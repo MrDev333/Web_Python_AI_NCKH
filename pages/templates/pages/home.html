@@ -140,7 +140,7 @@
                             hành động ngay lập tức.</span>
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                        <a href="#scanner"
+                        <a href="{% url 'url_scan' %}"
                             class="btn btn-lg btn-primary glass-effect hover:scale-105 transition-transform">
                             <i class="fas fa-search mr-2"></i>Bắt đầu quét ngay
                         </a>
@@ -386,7 +386,7 @@
                 </p>
             </div>
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8 fade-in">
-                <a href="{% url 'scanner' %}"
+                <a href="{% url 'url_scan' %}"
                     class="btn btn-lg btn-outline btn-white glass-effect hover:scale-105 transition-transform">
                     <i class="fas fa-rocket mr-2"></i>Dùng thử miễn phí ngay
                 </a>
@@ -508,7 +508,7 @@
                     <br>Dùng thử miễn phí hoặc nâng cấp để có trải nghiệm đầy đủ.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                    <a href="{% url 'scanner' %}"
+                    <a href="{% url 'url_scan' %}"
                         class="btn btn-lg btn-secondary glass-effect hover:scale-105 transition-transform">
                         <i class="fas fa-rocket mr-2"></i>Dùng thử miễn phí
                     </a>

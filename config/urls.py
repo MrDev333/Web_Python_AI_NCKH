@@ -19,17 +19,20 @@ from django.urls import path,include
 from accounts import views as allauth_views
 from pages import views as pages_views
 from core import views as core_views
-from Web_AI import views
+from email_scan import views as email_scan_views
+from url_scan import views as url_scan_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("app/", include("Web_AI.urls")),
     path("", include('pages.urls')),
     path('users/', include('accounts.urls')),
     path('core/', include('core.urls')),
     path('accounts/', include('allauth.urls')),
+    path("app/url_scan/", include("url_scan.urls")),
+    path("app/email_scan/", include("email_scan.urls")),
+
 ]
 urlpatterns += staticfiles_urlpatterns()

@@ -43,5 +43,5 @@ def profile_view(request):
 def settings_view(request):
     return render(request, 'users/settings.html')
 @login_required
-def activate_views(request):
-    return render(request, 'users/activate.html')
+def activity_history_views(request):
+    return render(request, 'users/activity_history.html')

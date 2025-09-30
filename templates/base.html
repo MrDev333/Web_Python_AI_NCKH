@@ -46,8 +46,8 @@
                         </svg>
                         Trang chủ
                     </a></li>
-                <li><a href="{% url 'scanner' %}"
-                        class="nav-link {% if request.resolver_match.url_name == 'scanner' %}active{% endif %}">
+                <li><a href="{% url 'url_scan' %}"
+                        class="nav-link {% if request.resolver_match.url_name == 'url_scan' or request.resolver_match.url_name == 'email_scan' %}active{% endif %}">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -147,13 +147,13 @@
                             </svg>
                             Hồ sơ cá nhân
                         </a>
-                        <a href="{% url 'activate' %}" class="dropdown-item">
+                        <a href="{% url 'history' %}" class="dropdown-item">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
-                            Hoạt động
+                            Lịch sử hoạt động
                         </a>
                         <a href="{% url 'settings' %}" class="dropdown-item">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,7 +189,7 @@
         <div id="mobile-menu" class="mobile-menu hidden">
             <div class="mobile-menu-content">
                 <a href="{% url 'home' %}" class="mobile-nav-link">Trang chủ</a>
-                <a href="{% url 'scanner' %}" class="mobile-nav-link">Kiểm tra</a>
+                <a href="{% url 'url_scan' %}" class="mobile-nav-link">Kiểm tra</a>
                 <a href="{% url 'about' %}" class="mobile-nav-link">Về chúng tôi</a>
                 <a href="{% url 'contact' %}" class="mobile-nav-link">Liên hệ</a>
                 <hr class="my-4">
@@ -277,11 +277,15 @@
                 sunIcon.classList.add('hidden');
                 moonIcon.classList.remove('hidden');
                 localStorage.setItem('theme', 'light');
+                themeToggle.checked = false;
+
             } else {
                 body.setAttribute('data-theme', 'dark');
                 sunIcon.classList.remove('hidden');
                 moonIcon.classList.add('hidden');
                 localStorage.setItem('theme', 'dark');
+                themeToggle.checked = true;
+
             }
         }
 
@@ -290,15 +294,25 @@
             const savedTheme = localStorage.getItem('theme') || 'light';
             const sunIcon = document.getElementById('sun-icon');
             const moonIcon = document.getElementById('moon-icon');
-
+            const themeToggle = document.getElementById('themeToggle');
             document.body.setAttribute('data-theme', savedTheme);
 
             if (savedTheme === 'dark') {
                 sunIcon.classList.remove('hidden');
                 moonIcon.classList.add('hidden');
+                // KIỂM TRA ĐIỀU KIỆN: Chỉ thao tác với themeToggle nếu nó tồn tại
+                if (themeToggle) {
+                    themeToggle.checked = true; // Gán true nếu là theme dark
+                }
+
             } else {
                 sunIcon.classList.add('hidden');
                 moonIcon.classList.remove('hidden');
+                // KIỂM TRA ĐIỀU KIỆN: Chỉ thao tác với themeToggle nếu nó tồn tại
+                if (themeToggle) {
+                    themeToggle.checked = false; // Gán true nếu là theme dark
+                }
+
             }
         }
 

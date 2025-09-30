@@ -1,0 +1,607 @@
+{% extends "base.html" %}
+{% block title %}Url - Scan{% endblock %}
+{% load static %}
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    * {
+        font-family: 'Inter', sans-serif;
+    }
+
+    .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .fade-in {
+        animation: fadeIn 0.6s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .result-card {
+        transform: translateY(20px);
+        opacity: 0;
+        animation: slideUp 0.5s ease-out forwards;
+    }
+
+    @keyframes slideUp {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    .scanner-input:focus {
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: #667eea;
+    }
+
+    .glass-effect {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+</style>
+</head>
+
+<body class="min-h-screen bg-base-200">
+
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <div class="max-w-4xl mx-auto fade-in">
+                <div
+                    class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6 pulse-animation">
+                    <i class="fas fa-globe text-5xl"></i>
+                </div>
+                <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                    URL Scanner
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 opacity-90">
+                    Kiểm tra tính an toàn của bất kỳ liên kết nào với công nghệ AI tiên tiến
+                </p>
+                <div class="flex flex-wrap justify-center gap-6 text-sm">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        <span>Quét thời gian thực</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        <span>Kiểm tra SSL/TLS</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-database mr-2"></i>
+                        <span>So sánh blacklist toàn cầu</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-bolt mr-2"></i>
+                        <span>Kết quả tức thì</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Scanner Section -->
+    <main class="container mx-auto px-4 py-12">
+        <div class="max-w-5xl mx-auto">
+            <!-- Scanner Email Href -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8 fade-in">
+                <a href="{% url 'email_scan' %}"
+                    class="btn btn-lg btn-outline btn-primary glass-effect hover:scale-105 transition-transform">
+                    <i class="fa-regular fa-envelope"></i></i>Kiểm tra Email
+                </a>
+            </div>
+            <!-- Scanner Input Card -->
+            <div class="card bg-base-100 shadow-2xl mb-8 fade-in">
+                <div class="card-body">
+                    <div class="text-center mb-6">
+                        <h2 class="text-3xl font-bold mb-2">
+                            <i class="fas fa-search text-info mr-2"></i>
+                            Nhập URL cần kiểm tra
+                        </h2>
+                        <p class="text-base-content/70">
+                            Hệ thống sẽ phân tích URL, kiểm tra blacklist, chứng chỉ SSL và các dấu hiệu phishing
+                        </p>
+                    </div>
+
+                    <div class="flex gap-3 mb-4">
+                        <input type="url" id="urlInput" placeholder="https://example.com - Nhập URL cần kiểm tra"
+                            class="input input-bordered input-lg w-full scanner-input focus:input-primary"
+                            aria-label="Nhập URL cần quét" />
+                        <button id="scanBtn" class="btn btn-primary btn-lg px-8">
+                            <i class="fas fa-search mr-2"></i>
+                            Quét ngay
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <p class="text-sm text-base-content/60 mb-2">Ví dụ nhanh:</p>
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <button class="btn btn-outline btn-sm" onclick="setExample('https://google.com')">
+                                google.com
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="setExample('https://facebook.com')">
+                                facebook.com
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="setExample('https://suspicious-site.com')">
+                                suspicious-site.com
+                            </button>
+                            <button class="btn btn-outline btn-sm" onclick="setExample('https://phishing-example.net')">
+                                phishing-example.net
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scan Progress -->
+            <div id="scanProgress" class="hidden mb-8">
+                <div class="card bg-blue-50 border-2 border-blue-200">
+                    <div class="card-body">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold text-lg">
+                                <i class="fas fa-spinner fa-spin mr-2 text-primary"></i>
+                                Đang quét URL...
+                            </h3>
+                            <div class="loading loading-spinner loading-md text-primary"></div>
+                        </div>
+                        <progress class="progress progress-primary w-full mb-2" id="progressBar" value="0"
+                            max="100"></progress>
+                        <p class="text-sm text-gray-600" id="scanStatus">Khởi tạo quét...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scan Results -->
+            <div id="scanResults" class="hidden">
+                Results will be populated here by JavaScript
+            </div>
+
+            <!-- Features Grid -->
+            <div class="grid md:grid-cols-3 gap-6 mt-12 fade-in">
+                <div
+                    class="card from-blue-50 to-blue-100 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="card-body text-center">
+                        <i class="fas fa-camera text-4xl text-blue-600 mb-4"></i>
+                        <h3 class="card-title justify-center text-lg">Screenshot Analysis</h3>
+                        <p class="text-sm text-base-content/70">
+                            Chụp ảnh màn hình trang web để phân tích giao diện và phát hiện giả mạo
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="card from-green-50 to-green-100 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="card-body text-center">
+                        <i class="fas fa-certificate text-4xl text-green-600 mb-4"></i>
+                        <h3 class="card-title justify-center text-lg">SSL Certificate Check</h3>
+                        <p class="text-sm text-base-content/70">
+                            Kiểm tra chứng chỉ SSL, mã hóa và mức độ bảo mật của kết nối
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="card from-purple-50 to-purple-100 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="card-body text-center">
+                        <i class="fas fa-code text-4xl text-purple-600 mb-4"></i>
+                        <h3 class="card-title justify-center text-lg">DOM Analysis</h3>
+                        <p class="text-sm text-base-content/70">
+                            Phân tích cấu trúc DOM, mã nguồn và các script độc hại
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="card bg-base-100 shadow-xl mt-12 fade-in">
+                <div class="card-body">
+                    <h3 class="card-title text-2xl mb-4">
+                        <i class="fas fa-info-circle text-info mr-2"></i>
+                        URL Scanner hoạt động như thế nào?
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold mb-2 flex items-center">
+                                <i class="fas fa-check-circle text-success mr-2"></i>
+                                Phân tích toàn diện
+                            </h4>
+                            <p class="text-sm text-base-content/70 mb-4">
+                                Hệ thống kiểm tra URL qua nhiều lớp bảo mật: blacklist toàn cầu, chứng chỉ SSL,
+                                nội dung trang web, và so sánh với cơ sở dữ liệu phishing.
+                            </p>
+                            <h4 class="font-bold mb-2 flex items-center">
+                                <i class="fas fa-brain text-primary mr-2"></i>
+                                Công nghệ AI
+                            </h4>
+                            <p class="text-sm text-base-content/70">
+                                Machine Learning phát hiện các mẫu tấn công mới, phân tích hành vi và
+                                đánh giá mức độ rủi ro với độ chính xác cao.
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-2 flex items-center">
+                                <i class="fas fa-shield-alt text-warning mr-2"></i>
+                                Bảo vệ real-time
+                            </h4>
+                            <p class="text-sm text-base-content/70 mb-4">
+                                Cập nhật liên tục từ mạng lưới threat intelligence toàn cầu,
+                                đảm bảo phát hiện các mối đe dọa mới nhất.
+                            </p>
+                            <h4 class="font-bold mb-2 flex items-center">
+                                <i class="fas fa-chart-line text-error mr-2"></i>
+                                Báo cáo chi tiết
+                            </h4>
+                            <p class="text-sm text-base-content/70">
+                                Nhận báo cáo đầy đủ về mức độ rủi ro, khuyến nghị bảo mật,
+                                và các hành động cần thực hiện.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- JavaScript Section -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlInput = document.getElementById('urlInput');
+            const scanBtn = document.getElementById('scanBtn');
+            const scanProgress = document.getElementById('scanProgress');
+            const scanResults = document.getElementById('scanResults');
+            const progressBar = document.getElementById('progressBar');
+            const scanStatus = document.getElementById('scanStatus');
+
+            // Enter key support
+            urlInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    scanBtn.click();
+                }
+            });
+
+            // Scan button click handler
+            scanBtn.addEventListener('click', function () {
+                const url = urlInput.value.trim();
+
+                if (!url) {
+                    showAlert('Vui lòng nhập URL cần quét!', 'warning');
+                    urlInput.focus();
+                    return;
+                }
+
+                if (!isValidUrl(url)) {
+                    showAlert('URL không hợp lệ! Vui lòng nhập URL đúng định dạng (ví dụ: https://example.com)', 'error');
+                    urlInput.focus();
+                    return;
+                }
+
+                performScan(url);
+            });
+
+            function isValidUrl(string) {
+                try {
+                    new URL(string);
+                    return true;
+                } catch (_) {
+                    return false;
+                }
+            }
+
+            function performScan(url) {
+                // Hide previous results
+                scanResults.classList.add('hidden');
+                scanProgress.classList.remove('hidden');
+
+                // Disable scan button
+                scanBtn.disabled = true;
+                scanBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang quét...';
+
+                // Simulate scan progress
+                const steps = [
+                    { progress: 15, text: 'Đang kết nối đến URL...' },
+                    { progress: 30, text: 'Kiểm tra chứng chỉ SSL...' },
+                    { progress: 50, text: 'Phân tích nội dung trang web...' },
+                    { progress: 70, text: 'So sánh với cơ sở dữ liệu mối đe dọa...' },
+                    { progress: 85, text: 'Đánh giá mức độ rủi ro...' },
+                    { progress: 100, text: 'Hoàn thành quét!' }
+                ];
+
+                let currentStep = 0;
+                const interval = setInterval(() => {
+                    if (currentStep < steps.length) {
+                        progressBar.value = steps[currentStep].progress;
+                        scanStatus.textContent = steps[currentStep].text;
+                        currentStep++;
+                    } else {
+                        clearInterval(interval);
+                        showResults(url);
+                    }
+                }, 700);
+            }
+
+            function showResults(url) {
+                // Hide progress
+                scanProgress.classList.add('hidden');
+
+                // Reset scan button
+                scanBtn.disabled = false;
+                scanBtn.innerHTML = '<i class="fas fa-search mr-2"></i>Quét ngay';
+
+                // Generate mock results
+                const isSafe = Math.random() > 0.3; // 70% chance of being safe
+                const riskScore = isSafe ? Math.floor(Math.random() * 30) : Math.floor(Math.random() * 40 + 60);
+                const confidence = Math.floor(Math.random() * 15 + 85);
+
+                const resultClass = isSafe ? 'success' : 'error';
+                const resultIcon = isSafe ? 'fa-check-circle' : 'fa-exclamation-triangle';
+                const resultText = isSafe ? 'An toàn' : 'Nguy hiểm';
+                const resultDesc = isSafe ? 'Không phát hiện mối đe dọa' : 'Phát hiện dấu hiệu lừa đảo';
+
+                scanResults.innerHTML = `
+                    <div class="result-card">
+                        <div class="alert alert-${resultClass} mb-6 shadow-lg">
+                            <i class="fas ${resultIcon} text-3xl"></i>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-xl">${resultText}</h3>
+                                <div class="text-sm mt-1">${resultDesc}</div>
+                                <div class="text-xs opacity-75 mt-2">
+                                    <i class="fas fa-link mr-1"></i>${url}
+                                </div>
+                            </div>
+                            <div class="flex-none">
+                                <div class="badge badge-lg badge-${resultClass}">${confidence}% tin cậy</div>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div class="card bg-base-100 shadow-xl">
+                                <div class="card-body">
+                                    <h3 class="card-title text-lg">
+                                        <i class="fas fa-chart-pie text-primary mr-2"></i>
+                                        Phân tích bảo mật
+                                    </h3>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm">SSL Certificate:</span>
+                                            <span class="badge badge-success">Valid</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm">Blacklist Status:</span>
+                                            <span class="badge badge-${isSafe ? 'success' : 'error'}">${isSafe ? 'Clean' : 'Listed'}</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm">Risk Score:</span>
+                                            <span class="badge badge-${resultClass}">${riskScore}/100</span>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm">Reputation:</span>
+                                            <span class="badge badge-info">${100 - riskScore}/100</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card bg-base-100 shadow-xl">
+                                <div class="card-body">
+                                    <h3 class="card-title text-lg">
+                                        <i class="fas fa-info-circle text-info mr-2"></i>
+                                        Thông tin kỹ thuật
+                                    </h3>
+                                    <div class="space-y-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <span>Server Location:</span>
+                                            <span class="font-semibold">${getRandomLocation()}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Response Time:</span>
+                                            <span class="font-semibold">${Math.floor(Math.random() * 500 + 100)}ms</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Content Type:</span>
+                                            <span class="font-semibold">text/html</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Last Updated:</span>
+                                            <span class="font-semibold">${getRandomDate()}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Scan ID:</span>
+                                            <span class="font-mono text-xs">#${generateScanId()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card bg-base-100 shadow-xl mb-6">
+                            <div class="card-body">
+                                <h3 class="card-title text-lg">
+                                    <i class="fas fa-chart-bar text-warning mr-2"></i>
+                                    Điểm số rủi ro chi tiết
+                                </h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <div class="flex justify-between text-sm mb-2">
+                                            <span class="font-semibold">Phishing Risk</span>
+                                            <span class="badge badge-${isSafe ? 'success' : 'error'}">${isSafe ? '5%' : '85%'}</span>
+                                        </div>
+                                        <progress class="progress progress-${isSafe ? 'success' : 'error'} w-full" value="${isSafe ? 5 : 85}" max="100"></progress>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-sm mb-2">
+                                            <span class="font-semibold">Malware Detection</span>
+                                            <span class="badge badge-${isSafe ? 'success' : 'warning'}">${isSafe ? '2%' : '45%'}</span>
+                                        </div>
+                                        <progress class="progress progress-${isSafe ? 'success' : 'warning'} w-full" value="${isSafe ? 2 : 45}" max="100"></progress>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-sm mb-2">
+                                            <span class="font-semibold">Spam Score</span>
+                                            <span class="badge badge-${isSafe ? 'success' : 'warning'}">${isSafe ? '1%' : '30%'}</span>
+                                        </div>
+                                        <progress class="progress progress-${isSafe ? 'success' : 'warning'} w-full" value="${isSafe ? 1 : 30}" max="100"></progress>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-sm mb-2">
+                                            <span class="font-semibold">Suspicious Activity</span>
+                                            <span class="badge badge-${isSafe ? 'success' : 'error'}">${isSafe ? '3%' : '70%'}</span>
+                                        </div>
+                                        <progress class="progress progress-${isSafe ? 'success' : 'error'} w-full" value="${isSafe ? 3 : 70}" max="100"></progress>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${generateRecommendations(isSafe)}
+
+                        <div class="flex flex-wrap gap-3 justify-center mt-6">
+                            <button class="btn btn-primary" onclick="scanAgain()">
+                                <i class="fas fa-redo mr-2"></i>Quét URL khác
+                            </button>
+                            <button class="btn btn-outline btn-secondary" onclick="downloadReport()">
+                                <i class="fas fa-download mr-2"></i>Tải báo cáo
+                            </button>
+                            <button class="btn btn-outline btn-info" onclick="shareResult()">
+                                <i class="fas fa-share mr-2"></i>Chia sẻ kết quả
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                scanResults.classList.remove('hidden');
+
+                // Scroll to results
+                setTimeout(() => {
+                    scanResults.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+
+                showAlert('Quét hoàn tất!', 'success');
+            }
+
+            function generateRecommendations(isSafe) {
+                if (isSafe) {
+                    return `
+                        <div class="alert alert-info shadow-lg">
+                            <i class="fas fa-lightbulb text-2xl"></i>
+                            <div>
+                                <h4 class="font-bold text-lg">Khuyến nghị</h4>
+                                <p class="text-sm">
+                                    URL này có vẻ an toàn. Tuy nhiên, hãy luôn cẩn thận khi nhập thông tin cá nhân 
+                                    và kiểm tra kỹ địa chỉ URL trước khi thực hiện giao dịch.
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="alert alert-error shadow-lg">
+                            <i class="fas fa-ban text-2xl"></i>
+                            <div>
+                                <h4 class="font-bold text-lg">Cảnh báo nguy hiểm - Không truy cập</h4>
+                                <p class="text-sm">
+                                    URL này có nguy cơ cao là trang lừa đảo hoặc chứa mã độc. 
+                                    <strong>Tuyệt đối không truy cập</strong> và không nhập bất kỳ thông tin nào. 
+                                    Hãy báo cáo URL này nếu bạn nhận được từ nguồn đáng ngờ.
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            function getRandomLocation() {
+                const locations = ['United States', 'Singapore', 'Japan', 'Germany', 'United Kingdom', 'Canada', 'Australia', 'France'];
+                return locations[Math.floor(Math.random() * locations.length)];
+            }
+
+            function getRandomDate() {
+                const date = new Date();
+                date.setDate(date.getDate() - Math.floor(Math.random() * 30));
+                return date.toLocaleDateString('vi-VN');
+            }
+
+            function generateScanId() {
+                return Math.random().toString(36).substr(2, 9).toUpperCase();
+            }
+
+            function showAlert(message, type) {
+                const existingAlert = document.querySelector('.temp-alert');
+                if (existingAlert) existingAlert.remove();
+
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type} temp-alert fixed top-4 right-4 w-auto max-w-md z-50 shadow-2xl`;
+                alertDiv.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle"></i>
+                    <span>${message}</span>
+                `;
+
+                document.body.appendChild(alertDiv);
+
+                setTimeout(() => {
+                    if (alertDiv.parentNode) alertDiv.remove();
+                }, 4000);
+            }
+
+            // Global functions for buttons
+            window.setExample = function (url) {
+                urlInput.value = url;
+                urlInput.focus();
+            };
+
+            window.scanAgain = function () {
+                scanResults.classList.add('hidden');
+                urlInput.value = '';
+                urlInput.focus();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            window.downloadReport = function () {
+                showAlert('Đang tạo báo cáo PDF... Tính năng sẽ sớm được cập nhật!', 'info');
+            };
+
+            window.shareResult = function () {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Kết quả quét CheckPhish',
+                        text: 'Xem kết quả quét bảo mật từ CheckPhish',
+                        url: window.location.href
+                    });
+                } else {
+                    navigator.clipboard.writeText(window.location.href);
+                    showAlert('Đã sao chép link vào clipboard!', 'success');
+                }
+            };
+        });
+    </script>
+</body>
+
+</html>
+
+{% endblock %}
