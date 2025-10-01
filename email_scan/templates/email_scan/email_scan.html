@@ -122,6 +122,17 @@
                     </p>
                     <textarea id="emailContent" class="textarea textarea-bordered w-full h-64 focus:textarea-primary"
                         placeholder="Dán nội dung email hoặc header email vào đây...&#10;&#10;Ví dụ:&#10;From: sender@example.com&#10;To: you@example.com&#10;Subject: Urgent: Verify your account&#10;&#10;Dear user,&#10;Your account will be suspended..."></textarea>
+
+                    <!-- Gmail Inbox Panel -->
+                    <div class="mt-6">
+                        <h3 class="font-semibold mb-2">Gmail Inbox</h3>
+                        <div id="gmail-inbox" style="max-height:320px; overflow:auto; border:1px solid #e5e7eb; padding:8px; border-radius:6px; background:#fff; color:#000;">
+                            <div id="gmail-loading">Đang tải hộp thư...</div>
+                            <ul id="gmail-list" style="list-style:none; padding:0; margin:0;"></ul>
+                            <div class="text-center mt-2"><button id="gmail-load-more" class="btn btn-sm btn-outline">Tải thêm</button></div>
+                        </div>
+                        <div class="text-xs text-base-content/60 mt-2">Danh sách được lấy từ tài khoản Google đã kết nối. Nếu chưa kết nối, vui lòng đăng nhập bằng Google tại <a href="/accounts/google/login/">Connect Google</a>.</div>
+                    </div>
                     <div class="card-actions justify-end mt-4">
                         <button id="scanBtn" class="btn btn-primary btn-lg">
                             <i class="fas fa-search mr-2"></i>
@@ -304,6 +315,86 @@
                     scanBtn.click();
                 }
             });
+
+            // --- Gmail inbox integration ---
+            const gmailList = document.getElementById('gmail-list');
+            const gmailLoading = document.getElementById('gmail-loading');
+            const gmailLoadMore = document.getElementById('gmail-load-more');
+            let gmailNextPageToken = null;
+            const GMAIL_PAGE_SIZE = 25; // default per user request
+
+            function loadInbox(loadMore = false) {
+                if (!loadMore) {
+                    gmailList.innerHTML = '';
+                    gmailNextPageToken = null;
+                }
+                gmailLoading.style.display = 'block';
+                let url = `{% url 'gmail_inbox_api' %}` + `?maxResults=${GMAIL_PAGE_SIZE}`;
+                if (gmailNextPageToken) url += `&pageToken=${encodeURIComponent(gmailNextPageToken)}`;
+                fetch(url)
+                    .then(r => r.json())
+                    .then(data => {
+                        gmailLoading.style.display = 'none';
+                        if (data.error) {
+                            gmailList.innerHTML = `<li class="p-2 text-error">${data.error}</li>`;
+                            return;
+                        }
+                        (data.messages || []).forEach(msg => {
+                            const li = document.createElement('li');
+                            li.className = 'p-2 border-b flex justify-between items-start';
+                            li.innerHTML = `
+                                <div style="flex:1; margin-right:8px;">
+                                    <div class="font-semibold">${escapeHtml(msg.subject)}</div>
+                                    <div class="text-xs text-base-content/60">${escapeHtml(msg.from)}</div>
+                                    <div class="text-xs text-base-content/60 mt-1">${escapeHtml(msg.snippet)}</div>
+                                </div>
+                                <div style="white-space:nowrap;">
+                                    <button class="btn btn-sm btn-outline mr-2" data-id="${msg.id}" data-action="preview">Xem</button>
+                                    <button class="btn btn-sm btn-primary" data-id="${msg.id}" data-action="scan">Quét</button>
+                                </div>
+                            `;
+                            gmailList.appendChild(li);
+                        });
+                        gmailNextPageToken = data.nextPageToken || null;
+                        gmailLoadMore.style.display = gmailNextPageToken ? 'inline-block' : 'none';
+                    })
+                    .catch(err => {
+                        gmailLoading.style.display = 'none';
+                        gmailList.innerHTML = `<li class="p-2 text-error">Lỗi khi load inbox</li>`;
+                        console.error(err);
+                    });
+            }
+
+            gmailLoadMore.addEventListener('click', function () {
+                loadInbox(true);
+            });
+
+            gmailList.addEventListener('click', function (e) {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                const id = btn.dataset.id;
+                const action = btn.dataset.action;
+                if (!id) return;
+                fetch(`{% url 'gmail_message_api' 'MSG_ID' %}`.replace('MSG_ID', encodeURIComponent(id)))
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.error) { alert(data.error); return; }
+                        const body = data.body || data.snippet || '';
+                        emailContent.value = body;
+                        emailContent.scrollIntoView({behavior:'smooth'});
+                        if (action === 'scan' && typeof performScan === 'function') {
+                            performScan(body);
+                        }
+                    })
+                    .catch(err => { console.error(err); alert('Không thể lấy nội dung email.'); });
+            });
+
+            // Utility escape
+            function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; }); }
+
+            // Load inbox on page load (may require user to be logged in with Google)
+            loadInbox(false);
+            // --- end gmail integration ---
 
             // Scan button click handler
             scanBtn.addEventListener('click', function () {

@@ -155,3 +155,18 @@ LOGOUT_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Configure socialaccount providers — request Gmail readonly scope so we can read inbox
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/gmail.readonly',
+        ],
+        'AUTH_PARAMS': {
+          'access_type': 'offline',  # request refresh token
+        }
+    }
+}
+SOCIALACCOUNT_STORE_TOKENS = True
+
